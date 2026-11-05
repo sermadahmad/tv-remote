@@ -1,23 +1,8 @@
-import { router } from 'expo-router';
-import { Button } from '../shared/components/Button';
-import { Copy, Screen } from '../shared/components/Screen';
+import { Redirect } from 'expo-router';
 
-export default function Foundation() {
-  return (
-    <Screen title="Universal TV Remote" subtitle="Application foundation">
-      <Copy>
-        The native protocol and full experience are scheduled for the next
-        milestones.
-      </Copy>
-      <Button
-        label="Device discovery"
-        onPress={() => router.push('/devices')}
-      />
-      <Button
-        label="Introduction"
-        secondary
-        onPress={() => router.push('/onboarding')}
-      />
-    </Screen>
-  );
+import { useSettingsStore } from '../store/settingsStore';
+
+export default function Index() {
+  const onboarded = useSettingsStore((state) => state.onboarded);
+  return <Redirect href={onboarded ? '/devices' : '/onboarding'} />;
 }

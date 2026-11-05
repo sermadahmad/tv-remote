@@ -85,11 +85,19 @@ export function challenge(value: unknown): PairingChallenge {
   const item = record(value);
   if (item.encoding !== 'hex' || item.length !== 6)
     throw new TVError('protocolFailure');
+  const expiry = item.expiresAt;
+  if (
+    typeof expiry !== 'number' ||
+    !Number.isFinite(expiry) ||
+    expiry < Date.now() ||
+    expiry > Number.MAX_SAFE_INTEGER
+  )
+    throw new TVError('protocolFailure');
   return {
     pairingId: string(item.pairingId),
     encoding: 'hex',
     length: 6,
-    expiresAt: integer(item.expiresAt, Date.now(), Number.MAX_SAFE_INTEGER),
+    expiresAt: Math.floor(expiry),
   };
 }
 export function event(value: unknown): TVEvent {

@@ -33,6 +33,24 @@ test('unknown native capability fields cannot enable controls', () => {
   });
 });
 test('validates pairing format and expiry', () => {
+  const nativeExpiry = Date.now() + 10000.125;
+  expect(
+    challenge({
+      pairingId: 'id',
+      encoding: 'hex',
+      length: 6,
+      expiresAt: nativeExpiry,
+    }).expiresAt,
+  ).toBe(Math.floor(nativeExpiry));
+  for (const expiresAt of [
+    NaN,
+    Infinity,
+    Number.MAX_SAFE_INTEGER + 1,
+    'future',
+  ])
+    expect(() =>
+      challenge({ pairingId: 'id', encoding: 'hex', length: 6, expiresAt }),
+    ).toThrow();
   expect(
     challenge({
       pairingId: 'id',
