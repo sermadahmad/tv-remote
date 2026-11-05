@@ -13,6 +13,8 @@ export function Screen({
   children,
   back = false,
   navigation = true,
+  compact = false,
+  accessory,
 }: {
   title: string;
   eyebrow?: string;
@@ -20,13 +22,20 @@ export function Screen({
   children: ReactNode;
   back?: boolean;
   navigation?: boolean;
+  compact?: boolean;
+  accessory?: ReactNode;
 }) {
   const { colors } = useTheme();
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: colors.background }]}>
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.content}
+        automaticallyAdjustKeyboardInsets
+        keyboardDismissMode="on-drag"
+        contentContainerStyle={[
+          styles.content,
+          compact && styles.compactContent,
+        ]}
       >
         {back && (
           <Pressable
@@ -40,19 +49,42 @@ export function Screen({
             <ArrowLeft color={colors.text} />
           </Pressable>
         )}
-        <Text style={[styles.eyebrow, { color: colors.muted }]}>{eyebrow}</Text>
         <Text
-          accessibilityRole="header"
-          style={[styles.title, { color: colors.text }]}
+          style={[
+            styles.eyebrow,
+            compact && styles.compactEyebrow,
+            { color: colors.muted },
+          ]}
         >
-          {title}
+          {eyebrow}
         </Text>
+        <View style={styles.heading}>
+          <Text
+            accessibilityRole="header"
+            style={[
+              styles.title,
+              compact && styles.compactTitle,
+              { color: colors.text },
+            ]}
+          >
+            {title}
+          </Text>
+          {accessory && <View style={styles.accessory}>{accessory}</View>}
+        </View>
         {subtitle && (
-          <Text style={[styles.subtitle, { color: colors.muted }]}>
+          <Text
+            style={[
+              styles.subtitle,
+              compact && styles.compactSubtitle,
+              { color: colors.muted },
+            ]}
+          >
             {subtitle}
           </Text>
         )}
-        <View style={styles.body}>{children}</View>
+        <View style={[styles.body, compact && styles.compactBody]}>
+          {children}
+        </View>
       </ScrollView>
       {navigation && (
         <View style={[styles.navigation, { borderTopColor: colors.line }]}>
@@ -85,12 +117,19 @@ export function Screen({
     </SafeAreaView>
   );
 }
-export function Card({ children }: { children: ReactNode }) {
+export function Card({
+  children,
+  compact = false,
+}: {
+  children: ReactNode;
+  compact?: boolean;
+}) {
   const { colors } = useTheme();
   return (
     <View
       style={[
         styles.card,
+        compact && styles.compactCard,
         { backgroundColor: colors.surface, borderColor: colors.line },
       ]}
     >
@@ -115,6 +154,20 @@ export function Copy({
 const styles = StyleSheet.create({
   root: { flex: 1 },
   content: { padding: tokens.space.page, paddingBottom: 32, flexGrow: 1 },
+  compactContent: { padding: tokens.space.card },
+  heading: { flexDirection: 'row', alignItems: 'center', gap: tokens.space.md },
+  accessory: { width: tokens.target },
+  compactEyebrow: { marginTop: tokens.space.xs },
+  compactTitle: {
+    fontSize: tokens.type.compactTitle,
+    marginTop: tokens.space.sm,
+  },
+  compactSubtitle: {
+    fontSize: 14,
+    lineHeight: tokens.space.lg,
+    marginTop: tokens.space.sm,
+  },
+  compactBody: { marginTop: tokens.space.lg, gap: tokens.space.md },
   back: {
     minHeight: 48,
     minWidth: 48,
@@ -128,6 +181,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   title: {
+    flex: 1,
     fontSize: 36,
     fontWeight: '700',
     letterSpacing: -1.1,
@@ -149,5 +203,6 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.lg,
     gap: tokens.space.card,
   },
+  compactCard: { padding: tokens.space.md, gap: tokens.space.md },
   copy: { fontSize: tokens.type.body, lineHeight: 24 },
 });
