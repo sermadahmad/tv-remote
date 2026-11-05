@@ -1,0 +1,25 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+  id 'com.google.protobuf' version '0.9.5'
+}
+
+group = 'expo.modules.tvremote'
+version = '0.1.0'
+
+android {
+  namespace 'expo.modules.tvremote'
+  defaultConfig { minSdkVersion 24 }
+  sourceSets { main { proto { srcDir '../proto' } } }
+  testOptions { unitTests.returnDefaultValues = true }
+}
+
+dependencies {
+  implementation 'com.google.protobuf:protobuf-javalite:4.36.2'
+  testImplementation 'junit:junit:4.13.2'
+}
+
+protobuf {
+  protoc { artifact = 'com.google.protobuf:protoc:4.36.2' }
+  generateProtoTasks { all().configureEach { builtins { java { option 'lite' } } } }
+}

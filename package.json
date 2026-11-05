@@ -56,7 +56,8 @@
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
-    "doctor": "expo-doctor"
+    "doctor": "expo-doctor",
+    "native:generate": "node scripts/generate-protocol.mjs"
   },
   "private": true,
   "engines": {

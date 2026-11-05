@@ -30,6 +30,8 @@ Messages are Protobuf encoded with a varint byte-length prefix. Incremental deco
 
 The independent synthetic fixture in `tests/fixtures/pairing.json` verifies integer padding and digest parity across native implementations. It contains public test keys only. Pairing codes are never persisted or logged. Every protocol exchange has a timeout; human entry expires after two minutes.
 
+Successful pairing returns an authenticated target identifier, `androidtv:` followed by the base64url SHA-256 SubjectPublicKeyInfo pin. Discovery names and addresses locate saved credentials; they do not authenticate a TV. The application adopts the authenticated identifier before saving metadata or opening control. Every control connection still verifies the native pin. `TVAdapter.submitPairingCode` returns this target so a changing address does not become the saved identity.
+
 ## Trust establishment
 
 The reference Python transport uses CERT_NONE. This project does not use an unconditional control-session trust manager. Pairing has an explicit provisional trust policy: parse the peer certificate, require a valid RSA key and validity period, and restrict that channel to pairing messages. The displayed-code exchange binds the candidate keys under the protocol's authentication properties.
