@@ -41,3 +41,11 @@ example
 # generated native folders
 /ios
 /android
+
+# Test and native build artifacts
+coverage/
+artifacts/
+**/.build/
+**/build/
+**/.swiftpm/
+.maestro/

@@ -1,0 +1,14 @@
+node_modules
+**/.build
+**/build
+**/Generated
+.expo
+android
+ios
+coverage
+dist
+package-lock.json
+modules/tv-remote-native/proto
+modules/tv-remote-native/ios/Generated
+modules/tv-remote-native/ios/.build
+modules/tv-remote-native/android/build

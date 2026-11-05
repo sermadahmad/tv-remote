@@ -1,0 +1,13 @@
+{
+  "cli": { "appVersionSource": "local" },
+  "build": {
+    "development": { "developmentClient": true, "distribution": "internal" },
+    "ui-test": {
+      "distribution": "internal",
+      "env": { "APP_VARIANT": "ui-test" },
+      "ios": { "simulator": true },
+      "android": { "buildType": "apk" }
+    },
+    "production": { "env": { "APP_VARIANT": "production" } }
+  }
+}
