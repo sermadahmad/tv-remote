@@ -29,10 +29,107 @@ function setup(paired = true) {
     notices,
     () => 0.5,
   );
-  return { adapter, devices, repository, coordinator, states, notices };
+  return {
+    adapter,
+    devices,
+    references,
+    repository,
+    coordinator,
+    states,
+    notices,
+  };
 }
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => jest.useRealTimers());
+test('forgetting an old TV cannot erase a newly selected TV or its recovery target', async () => {
+  const { coordinator, adapter, references } = setup();
+  await coordinator.select(television);
+  let finish = (): void => {};
+  jest.spyOn(adapter, 'releaseKeys').mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const forgetting = coordinator.forget(television.id);
+  const other = {
+    ...television,
+    id: 'other',
+    name: 'Other',
+    serviceName: 'Other',
+    host: '192.168.1.21',
+  };
+  references.values.set(other.id, 'opaque-other');
+  await coordinator.select(other);
+  finish();
+  await forgetting;
+  coordinator.handle({
+    type: 'disconnected',
+    sessionId: testSession.sessionId,
+    error: new TVError('connectionLost'),
+  });
+  expect(coordinator.snapshot()).toMatchObject({
+    status: 'reconnecting',
+    deviceId: other.id,
+  });
+  await jest.advanceTimersByTimeAsync(1000);
+  expect(coordinator.snapshot()).toMatchObject({
+    status: 'connected',
+    session: { deviceId: other.id },
+  });
+});
+test('selecting a TV waits for its pending forget and starts fresh pairing', async () => {
+  const { coordinator, adapter } = setup();
+  await coordinator.select(television);
+  let finish = (): void => {};
+  let markEntered = (): void => {};
+  const entered = new Promise<void>((resolve) => {
+    markEntered = resolve;
+  });
+  jest.spyOn(adapter, 'forgetCredentials').mockImplementationOnce(() => {
+    markEntered();
+    return new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+  });
+  const forgetting = coordinator.forget(television.id);
+  await entered;
+  const selecting = coordinator.select(television);
+  await Promise.resolve();
+  expect(adapter.pairingCount).toBe(0);
+  finish();
+  await Promise.all([forgetting, selecting]);
+  expect(coordinator.snapshot()).toMatchObject({ status: 'pairing' });
+  expect(adapter.pairingCount).toBe(1);
+});
+test('duplicate forgetting shares one credential deletion', async () => {
+  const { coordinator, adapter } = setup();
+  await coordinator.select(television);
+  let finish = (): void => {};
+  jest.spyOn(adapter, 'releaseKeys').mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const first = coordinator.forget(television.id);
+  const second = coordinator.forget(television.id);
+  finish();
+  await Promise.all([first, second]);
+  expect(adapter.forgotten).toEqual([television.id]);
+});
+test('failed forgetting can be retried after storage recovers', async () => {
+  const { coordinator, adapter, repository } = setup();
+  await coordinator.select(television);
+  adapter.forgetError = new TVError('storageFailure');
+  await expect(coordinator.forget(television.id)).rejects.toMatchObject({
+    code: 'storageFailure',
+  });
+  expect(repository.list()).toHaveLength(1);
+  adapter.forgetError = null;
+  await coordinator.forget(television.id);
+  expect(repository.list()).toHaveLength(0);
+});
 test('switching TVs disables the old controls before cleanup completes', async () => {
   const { coordinator, adapter } = setup();
   await coordinator.select(television);

@@ -19,6 +19,7 @@ export class ConnectionCoordinator {
   private retryTimer: ReturnType<typeof setTimeout> | null = null;
   private paused = false;
   private submitting = false;
+  private readonly forgetting = new Map<string, Promise<void>>();
 
   constructor(
     private readonly adapter: TVAdapter,
@@ -91,6 +92,12 @@ export class ConnectionCoordinator {
     try {
       await this.closeCurrent(previous);
       if (generation !== this.generation || this.paused) return;
+      const forgetting = this.forgetting.get(target.id);
+      if (forgetting) {
+        await forgetting;
+        if (generation !== this.generation || this.paused) return;
+        this.target = target;
+      }
       const paired = !forcePair && (await this.repository.isPaired(target.id));
       if (generation !== this.generation || this.paused) return;
       this.controller = new AbortController();
@@ -244,9 +251,20 @@ export class ConnectionCoordinator {
     if (target) await this.select(target);
   }
   async forget(deviceId: string): Promise<void> {
+    const pending = this.forgetting.get(deviceId);
+    if (pending) return pending;
+    const work = this.forgetOnce(deviceId);
+    this.forgetting.set(deviceId, work);
+    try {
+      await work;
+    } finally {
+      this.forgetting.delete(deviceId);
+    }
+  }
+  private async forgetOnce(deviceId: string): Promise<void> {
     if (this.target?.id === deviceId) {
       await this.disconnect();
-      this.target = null;
+      if (this.target?.id === deviceId) this.target = null;
     }
     await this.repository.forget(deviceId);
   }
