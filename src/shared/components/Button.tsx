@@ -12,6 +12,7 @@ interface Props {
   disabled?: boolean;
   loading?: boolean;
   secondary?: boolean;
+  compact?: boolean;
   accessibilityHint?: string;
   testID?: string;
 }
@@ -22,6 +23,7 @@ export function Button({
   disabled = false,
   loading = false,
   secondary = false,
+  compact = false,
   accessibilityHint,
   testID,
 }: Props) {
@@ -45,6 +47,7 @@ export function Button({
       }}
       style={({ pressed }) => [
         styles.button,
+        compact && styles.compactButton,
         {
           backgroundColor: secondary
             ? theme.colors.raised
@@ -63,6 +66,7 @@ export function Button({
       <Text
         style={[
           styles.label,
+          compact && styles.compactLabel,
           { color: secondary ? theme.colors.text : theme.colors.onAccent },
         ]}
       >
@@ -82,5 +86,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
   },
+  compactButton: {
+    minHeight: tokens.remoteTarget,
+    paddingHorizontal: tokens.space.sm,
+  },
+  compactLabel: { fontSize: tokens.type.caption },
   label: { fontSize: tokens.type.body, fontWeight: '600', textAlign: 'center' },
 });

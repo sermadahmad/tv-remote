@@ -142,6 +142,7 @@ export default function Remote() {
         <View style={styles.mode}>
           <Button
             label={touchpad ? 'Use direction buttons' : 'Use touchpad'}
+            compact
             secondary
             disabled={
               !(['up', 'down', 'left', 'right', 'select'] as const).every(
