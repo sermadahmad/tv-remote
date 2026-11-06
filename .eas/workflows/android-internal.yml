@@ -1,0 +1,54 @@
+name: Android internal testing
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+concurrency:
+  group: android-play-internal
+  cancel_in_progress: false
+defaults:
+  image: sdk-58
+  tools:
+    node: 24.19.0
+env:
+  CI: '1'
+  APP_VARIANT: production
+  ANDROID_TARGET_SDK: '36'
+  EXPO_NO_TELEMETRY: '1'
+  TVREMOTE_DISABLE_WATCHMAN: '1'
+jobs:
+  checks:
+    name: Quality and native protocol tests
+    runs_on: linux-medium
+    steps:
+      - uses: eas/checkout
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Type, lint and format checks
+        run: npm run typecheck && npm run lint && npm run format:check
+      - name: Domain, navigation and component coverage
+        run: npm run test:coverage
+      - name: Protocol and native module registration
+        run: node scripts/verify-fixtures.mjs && node scripts/verify-native-linking.mjs
+      - name: Expo compatibility
+        run: npx expo install --check && npx expo-doctor
+      - name: Verify deployment configuration
+        run: node scripts/verify-deployment.mjs
+      - name: Generate Android project
+        run: npx expo prebuild --platform android --no-install
+      - name: Android native tests
+        run: ./android/gradlew -p android :tv-remote-native:testDebugUnitTest --max-workers=4 --console=plain
+  build_android:
+    name: Signed production Android App Bundle
+    needs: [checks]
+    type: build
+    params:
+      platform: android
+      profile: production
+  submit_internal:
+    name: Google Play internal testing
+    needs: [build_android]
+    type: submit
+    params:
+      profile: internal
+      build_id: ${{ needs.build_android.outputs.build_id }}

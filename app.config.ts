@@ -1,13 +1,18 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import buildIdentity from './src/core/buildIdentity.json';
+
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const uiTest = process.env.APP_VARIANT === 'ui-test';
   const targetSdk = process.env.ANDROID_TARGET_SDK === '37' ? 37 : 36;
-  const identifier = `dev.universaltv.remote${uiTest ? '.uitest' : ''}`;
+  const identifier = uiTest
+    ? buildIdentity.uiTestApplicationId
+    : buildIdentity.applicationId;
   return {
     ...config,
     name: 'Universal TV Remote',
-    slug: uiTest ? 'universal-tv-remote-ui-test' : 'universal-tv-remote',
+    slug: buildIdentity.slug,
+    owner: buildIdentity.owner,
     scheme: uiTest ? 'universaltvremote-uitest' : 'universaltvremote',
     ios: { ...config.ios, bundleIdentifier: identifier },
     android: {
@@ -21,8 +26,9 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     plugins: [
       ...(config.plugins ?? []).filter(
         (plugin) =>
-          (typeof plugin === 'string' ? plugin : plugin[0]) !==
-          'expo-build-properties',
+          !['expo-build-properties', 'expo-dev-client'].includes(
+            typeof plugin === 'string' ? plugin : (plugin[0] ?? ''),
+          ),
       ),
       [
         'expo-build-properties',
@@ -35,20 +41,25 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
           ios: { deploymentTarget: '16.4' },
         },
       ],
-      ...(uiTest
-        ? ([
-            [
-              'expo-dev-client',
-              {
+      [
+        'expo-dev-client',
+        {
+          addGeneratedScheme: false,
+          ...(uiTest
+            ? {
                 defaultLaunchURL: 'http://localhost:8081',
                 skipOnboarding: true,
                 showMenuAtLaunch: false,
                 toolsButton: false,
-              },
-            ],
-          ] satisfies NonNullable<ExpoConfig['plugins']>)
-        : []),
+              }
+            : {}),
+        },
+      ],
     ],
-    extra: { ...config.extra, uiTest },
+    extra: {
+      ...config.extra,
+      uiTest,
+      eas: { projectId: buildIdentity.projectId },
+    },
   };
 }

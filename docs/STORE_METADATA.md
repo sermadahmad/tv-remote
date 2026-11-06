@@ -1,6 +1,6 @@
 # Store preparation — unpublished draft
 
-Working name: **Universal TV Remote**. Development identifier: `dev.universaltv.remote`. Final publisher, signing team/keystore, store identifiers, support contact, privacy-policy URL, icons, and screenshots are not supplied. Nothing has been submitted or published.
+Confirmed app: **Universal TV Remote**, free, English-first, Android package `com.sermadahmad.tvremote`, public support contact `fixemj@gmail.com`. Expo owner/project: `sermadahmad/tv-remote`. The Android upload key is managed in Expo Credentials. Play Console app creation and the first internal release are tracked in DEPLOYMENT.md. Final publisher verification, privacy-policy URL, release icons, and store screenshots remain outstanding. No public release has been published.
 
 ## Proposed description
 
@@ -16,4 +16,4 @@ The current app uses Android API 24+ and iOS 16.4+, Android compile API 37 and t
 
 Review [PRIVACY.md](../PRIVACY.md) against signed release binaries. Complete Google Play Data safety and App Store privacy forms based on actual data handling and bundled dependencies. Supply a support URL and monitored privacy contact. Do not submit the separately identified simulated-TV build.
 
-Release acceptance still requires hardware trust-continuity/pairing/control tests on both phone platforms, complete UI/accessibility and minimum-OS coverage, dependency-advisory remediation, signed release inspection, publisher-approved branding, and store assets. CI is configured but has not run remotely because no code has been pushed.
+Release acceptance still requires hardware trust-continuity/pairing/control tests on both phone platforms, complete UI/accessibility and minimum-OS coverage, dependency-advisory remediation, publisher-approved branding, and store assets. EAS cloud quality checks, signed-AAB inspection and internal submission have passed. The GitHub repository is connected; future pushes will include the local workflow. First-time tester-link propagation and complete workflow validation are recorded in DEPLOYMENT.md. No code has been pushed.

@@ -1,4 +1,4 @@
-appId: dev.universaltv.remote.uitest
+appId: com.sermadahmad.tvremote.uitest
 name: Explicit simulated TV journey
 ---
 - launchApp:
@@ -17,18 +17,14 @@ name: Explicit simulated TV journey
 - tapOn: Connect to Living Room · Simulated
 - tapOn: TV pairing code
 - inputText: '000000'
-- scrollUntilVisible:
-    element: Pair securely
-- tapOn: Pair securely
+- pressKey: Enter
 - assertVisible: 'Enter the six characters shown on the TV.*'
 - tapOn:
     text: Dismiss message
     optional: true
 - tapOn: TV pairing code
 - inputText: A1B2C3
-- scrollUntilVisible:
-    element: Pair securely
-- tapOn: Pair securely
+- pressKey: Enter
 - extendedWaitUntil:
     visible: Connected · Local Wi-Fi
     timeout: 15000
@@ -58,6 +54,7 @@ name: Explicit simulated TV journey
 - eraseText: 1
 - inputText: Lounge
 - assertVisible: Lounge
+- pressKey: Enter
 - scrollUntilVisible:
     element: Save name
 - tapOn: Save name

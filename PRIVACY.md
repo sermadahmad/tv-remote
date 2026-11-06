@@ -12,4 +12,4 @@ Use **Forget TV** to delete the selected TV's local credentials and saved metada
 
 No remote telemetry or crash-reporting service is configured in application code. Android/iOS and distribution services may provide their own diagnostics under the user's platform settings. This repository's UI-test variant uses simulated devices and must not be distributed as the production application.
 
-Before store submission, supply the publisher's legal name, a monitored privacy contact, and a public policy URL; review platform privacy forms, dependency behavior, and the final signed binaries. No privacy-policy website has been published by this project.
+The approved support contact is fixemj@gmail.com. Before public release, confirm the publisher's legal identity, privacy contact handling, and a public policy URL; review platform privacy forms, dependency behavior, and the final signed binaries. No privacy-policy website has been published by this project.

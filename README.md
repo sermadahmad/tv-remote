@@ -18,7 +18,7 @@ npm run ios
 npm run android
 ```
 
-Subsequent JavaScript development uses `npm start`. Native code or configuration changes require rebuilding the development client. SDK 58 prebuild recreates native directories by default; use `--no-clean` for an incremental configuration sync. Generated root `ios/` and `android/` projects are ignored; edit Expo configuration and the local module instead. Development identifiers are `dev.universaltv.remote` and are configurable before release.
+Subsequent JavaScript development uses `npm start`. Native code or configuration changes require rebuilding the development client. SDK 58 prebuild recreates native directories by default; use `--no-clean` for an incremental configuration sync. Generated root `ios/` and `android/` projects are ignored; edit Expo configuration and the local module instead. The permanent application identifier is `com.sermadahmad.tvremote`. The project is linked to `sermadahmad/tv-remote` on Expo. Older development identifiers install as separate applications; pairing credentials are not migrated.
 
 If Watchman stalls on generated native files, start Metro with `TVREMOTE_DISABLE_WATCHMAN=1 npm start`. For an Android emulator, `adb reverse tcp:8081 tcp:8081` lets the development client use `http://localhost:8081`. The E2E flows also handle entering this address in the development launcher.
 
@@ -31,6 +31,7 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm run test:coverage
+node scripts/verify-deployment.mjs
 node scripts/verify-fixtures.mjs
 node scripts/verify-native-linking.mjs
 npx expo install --check
@@ -51,7 +52,7 @@ APP_VARIANT=ui-test npx expo prebuild
 APP_VARIANT=ui-test npm run ios
 ```
 
-This build uses the separate identifier `dev.universaltv.remote.uitest`, displays a persistent **UI TEST · SIMULATED TV** banner, and uses pairing code `A1B2C3`. It never contacts a TV. Production builds instantiate the real adapter; a missing native module produces an actionable error. The fixture adapter requires both the explicit configuration flag and the exact test application identifier.
+This build uses the separate identifier `com.sermadahmad.tvremote.uitest`, displays a persistent **UI TEST · SIMULATED TV** banner, and uses pairing code `A1B2C3`. It never contacts a TV. Production builds instantiate the real adapter; a missing native module produces an actionable error. The fixture adapter requires both the explicit configuration flag and the exact test application identifier.
 
 Keep `APP_VARIANT=ui-test` set when starting Metro for this variant. See [e2e/README.md](e2e/README.md) for reproducible emulator commands and limitations. Fixture credential references are in memory; a simulated reconnect in one run does not establish credential persistence across app restarts.
 
@@ -63,7 +64,8 @@ Default Android target API is 36 with compile API 37. `ANDROID_TARGET_SDK=37` al
 - [PROTOCOL.md](PROTOCOL.md): pinned references, trust policy, wire behavior, and limitations.
 - [TESTING.md](TESTING.md): reproducible checks and validation matrix.
 - [DEVELOPMENT.md](DEVELOPMENT.md): milestones and acceptance gates.
+- [DEPLOYMENT.md](DEPLOYMENT.md): EAS signing, main-branch automation, Google Play internal testing, and deployment status.
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md): vendored schema licensing.
 - [PRIVACY.md](PRIVACY.md) and [store preparation](docs/STORE_METADATA.md): unpublished drafts and remaining distribution requirements.
 
-Release work still includes physical-device validation, security review of initial trust, keyboard implementation/validation, signed release builds, final branding, store metadata, and privacy disclosures. No TV model is currently certified.
+Release work still includes physical-device validation, security review of initial trust, keyboard implementation/validation, internal delivery, final branding, store metadata, and privacy disclosures. Android upload signing and a signed cloud AAB are verified; see DEPLOYMENT.md for the current pipeline and account-permission gates. No TV model is currently certified.

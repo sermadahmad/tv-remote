@@ -1,9 +1,9 @@
-appId: dev.universaltv.remote
+appId: com.sermadahmad.tvremote
 name: Real adapter simulator launch
 ---
 - launchApp:
     clearState: true
-- openLink: exp+universal-tv-remote://?__expo_url=http%3A%2F%2Flocalhost%3A8081&__expo_disable_onboarding=1&__expo_disable_fab=1&__expo_disable_auto_launch=1
+- openLink: universaltvremote://?__expo_url=http%3A%2F%2Flocalhost%3A8081&__expo_disable_onboarding=1&__expo_disable_fab=1&__expo_disable_auto_launch=1
 - tapOn:
     text: Open
     optional: true

@@ -1,6 +1,6 @@
 # Validation record
 
-Updated on 2026-11-06. Results below are local checks; configured GitHub Actions have not run remotely. No code has been pushed.
+Updated on 2026-11-06. Local checks and manually triggered EAS cloud runs are identified below. GitHub Actions have not run remotely. No code has been pushed.
 
 ## Environment and completed checks
 
@@ -17,12 +17,20 @@ macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, And
 | Expo dependency compatibility        | Up to date                                                                                       |
 | Production JavaScript export         | iOS and Android Hermes bytecode exports passed                                                   |
 | TypeScript                           | Passed                                                                                           |
-| Jest                                 | 86 tests passed; 93.51% statements, 90.38% branches in the gated core/application scope          |
+| Jest                                 | 91 tests passed; 93.60% statements, 90.78% branches in the gated core/application scope          |
 | Lint and formatting                  | Passed on the staged implementation snapshots                                                    |
 | Android real-adapter Maestro         | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture      |
 | Android simulated-TV Maestro         | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget |
 | iOS simulator / Maestro              | Full flow unverified: driver startup/accessibility and development-launcher problems             |
 | Physical TV / Android phone / iPhone | Unavailable; not tested                                                                          |
+
+## Deployment revision — 2026-11-06
+
+The permanent production identifier is `com.sermadahmad.tvremote`; the simulated build uses `.uitest`. Both new application identities were built locally for Android x86_64 and iOS x86_64 simulator. The final Android permission cleanup rebuilt successfully with all 5 native JUnit tests. Both final Hermes bundle exports, 91 Jest tests and coverage gates, types, lint and formatting passed. Both updated Android Maestro flows passed with the permanent identifiers, including the SDK 58 route-anchor refinement.
+
+Two EAS workflow pilots were triggered from local source archives without pushing Git. Both cloud quality jobs passed, including locked installation, compatibility checks and Android native tests. The first signed production AAB (version code 2) built successfully and its package, production adapter flag, SDK levels and non-debug upload signature were inspected with bundletool, jarsigner and keytool. Its permission review led to blocking unused storage, overlay, biometric and install-referrer permissions. The subsequent signed build and submission status are recorded in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+The new Play app record, support email and initial internal tester list were created. The owner connected the Expo repository and granted the publisher service account access. Its managed key successfully submitted version code 3; Play Console reports the internal track Active. The first tester opt-in link remains unavailable during store propagation, so Play installation is unverified. See DEPLOYMENT.md for the complete pipeline run and delivery record.
 
 ## Automated scope
 
@@ -30,7 +38,7 @@ macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, And
 
 The persistent Remote/Devices/Saved/Settings tab navigator passed type checking, lint, formatting, 91 Jest tests, and both production Hermes bundle exports. Router integration tests verify preserved tab state, focus-scoped discovery, pairing cancellation to the originating tab, success into the existing Remote tab, and rejection of gestures from an earlier focus. Coordinator tests verify session-scoped key release without disconnecting and rejection of obsolete-session input.
 
-The updated Android simulated-TV Maestro journey passed, including returning to the same touchpad mode after visiting Settings, Android Back returning to Remote, rename/reconnect/forget, and the disconnected Remote state. The production smoke rerun was interrupted by the emulator disconnecting and is being repeated during deployment setup. These results do not establish physical TV compatibility.
+The updated Android simulated-TV Maestro journey passed, including returning to the same touchpad mode after visiting Settings, Android Back returning to Remote, rename/reconnect/forget, and the disconnected Remote state. After the emulator restart, the real-adapter production smoke passed with the permanent package `com.sermadahmad.tvremote`. These results do not establish physical TV compatibility.
 
 Jest uses the actual Lucide CommonJS distribution, an in-memory adapter for deterministic application tests, and component-level rendering. It covers capability gates, hexadecimal entry including A–F, private IPv4 validation, redacted errors, corrupt storage, authenticated identity association, discovery lifecycle/permission recovery, cancellation, bounded retry, foreground/background behavior, switching, forgetting, stale events, D-pad taps/holds, and pairing form behavior. Core/application coverage gates are 90% statements and 85% branches; meaningful behavioral assertions are required.
 
@@ -88,6 +96,6 @@ Record the actual TV manufacturer/model, firmware, Android TV Remote Service ver
 
 The initial displayed-code trust policy is proposed and requires hardware and security review. The control endpoint must present the same pinned public key learned during pairing; a mismatch fails closed. Keystore/Keychain credential lifecycle, backup exclusions, and interrupted native operations require on-device validation. Transport success is not TV-side execution confirmation. There is no certified compatibility list yet.
 
-Debug builds and JavaScript exports do not replace signed release inspection. Signing, distribution identities, final icons/screenshots, store metadata/privacy forms, and minimum-OS device tests remain pending.
+Debug builds and JavaScript exports do not replace signed release inspection. Android upload signing, permanent distribution identities and signed-AAB inspection are verified. Play tester access/installation, final icons/screenshots, store metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
 
 The dependency audit reports 31 advisories (30 moderate, 1 low), with no high/critical advisories. These include tooling advisories for glob/minimatch and a deepmerge advisory without a published fix. Do not force Expo/Jest downgrades to silence the audit. Dependency remediation remains a release gate; rerun compatibility/native checks after dependency changes.

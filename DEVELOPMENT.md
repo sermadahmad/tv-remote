@@ -35,4 +35,10 @@ The user requested local milestone commits with passing type, lint, test, and bu
 
 QA follow-up commits are `703c7d3` (phase 7, narrow remote labels) and `96bfd46` (phase 6, selecting an existing name for replacement). The final phase 8 commit adds the separate UI-test launcher configuration, two passing Android Maestro flows, reproducible run instructions, privacy/store drafts, and the validation record. Both production Hermes bundles and all 86 JavaScript tests pass; Android/iOS native build and native test evidence is recorded in TESTING.md.
 
-These are local development deliverables. Signing, distribution assets, full iOS UI automation, simulator accessibility review, minimum-OS coverage, keyboard support, and physical-device testing remain open release gates in TESTING.md. No phase 3 hardware or phase 8 production-release acceptance gate is marked passed.
+These are development deliverables. Android upload signing and a signed cloud build are now verified. Distribution assets, full iOS UI automation, simulator accessibility review, minimum-OS coverage, keyboard support, and physical-device testing remain open release gates in TESTING.md. No phase 3 hardware or phase 8 production-release acceptance gate is marked passed.
+
+## Persistent tabs and deployment revision
+
+`b6eaba6` adds the persistent Remote, Devices, Saved and Settings tabs, pairing returns, focus-scoped discovery and session-guarded key release. `e55c206` applies the SDK 58 route anchor and card onboarding configuration after emulator verification. Types, lint, formatting, 91 Jest tests, both Hermes bundles, Android/iOS native builds and both Android Maestro flows passed with the permanent application identifiers.
+
+The subsequent deployment configuration links the existing Expo project, isolates the simulated package and scheme, manages Android version codes remotely, and configures a checks → signed AAB → exact-build internal submission workflow. Cloud runs upload a local source archive; they do not push commits. Actual signed-build and Play results, including account-owner permission blockers, are maintained in DEPLOYMENT.md.
