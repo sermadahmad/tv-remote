@@ -56,6 +56,7 @@ export default function Saved() {
             <>
               <TextInput
                 accessibilityLabel="Device name"
+                selectTextOnFocus
                 value={name}
                 onChangeText={setName}
                 maxLength={60}
