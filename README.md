@@ -68,4 +68,4 @@ Default Android target API is 36 with compile API 37. `ANDROID_TARGET_SDK=37` al
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md): vendored schema licensing.
 - [PRIVACY.md](PRIVACY.md) and [store preparation](docs/STORE_METADATA.md): unpublished drafts and remaining distribution requirements.
 
-Release work still includes physical-device validation, security review of initial trust, keyboard implementation/validation, internal delivery, final branding, store metadata, and privacy disclosures. Android upload signing and a signed cloud AAB are verified; see DEPLOYMENT.md for the current pipeline and account-permission gates. No TV model is currently certified.
+Release work still includes physical-device validation, security review of initial trust, keyboard implementation/validation, Play tester installation, final branding, store metadata, and privacy disclosures. Android signing, AAB inspection and internal submission are verified; see DEPLOYMENT.md for the current pipeline and tester availability. No TV model is currently certified.

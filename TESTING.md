@@ -6,31 +6,39 @@ Updated on 2026-11-06. Local checks and manually triggered EAS cloud runs are id
 
 macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, Android compile API 37 / target 36. Android emulator: Pixel 9a, API 35, x86_64. iOS simulators: iPhone 17 Pro and iPhone SE (3rd generation), iOS 26.4. Native builds include the owned Expo module, MMKV/Nitro, SwiftProtobuf, and swift-certificates.
 
-| Check                                | Recorded result                                                                                  |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| Android debug application            | Initial build passed for all four ABIs; final native source rebuilt for x86_64                   |
-| Android native JUnit                 | 5 tests passed                                                                                   |
-| iOS debug simulator application      | Initial arm64/x86_64 build passed; final native source rebuilt for x86_64; linking passed        |
-| Swift package tests on macOS         | 7 tests passed                                                                                   |
-| Hosted iOS Keychain XCTest           | 3 tests passed with a signed simulator host                                                      |
-| Expo Doctor                          | 20/20 checks passed                                                                              |
-| Expo dependency compatibility        | Up to date                                                                                       |
-| Production JavaScript export         | iOS and Android Hermes bytecode exports passed                                                   |
-| TypeScript                           | Passed                                                                                           |
-| Jest                                 | 91 tests passed; 93.60% statements, 90.78% branches in the gated core/application scope          |
-| Lint and formatting                  | Passed on the staged implementation snapshots                                                    |
-| Android real-adapter Maestro         | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture      |
-| Android simulated-TV Maestro         | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget |
-| iOS simulator / Maestro              | Full flow unverified: driver startup/accessibility and development-launcher problems             |
-| Physical TV / Android phone / iPhone | Unavailable; not tested                                                                          |
+| Check                                | Recorded result                                                                                   |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| Android debug application            | Initial build passed for all four ABIs; final native source rebuilt for x86_64                    |
+| Android native JUnit                 | 5 tests passed                                                                                    |
+| iOS debug simulator application      | Initial arm64/x86_64 build passed; final native source rebuilt for x86_64; linking passed         |
+| Swift package tests on macOS         | 7 tests passed                                                                                    |
+| Hosted iOS Keychain XCTest           | 3 tests passed with a signed simulator host                                                       |
+| Expo Doctor                          | 20/20 checks passed                                                                               |
+| Expo dependency compatibility        | Up to date                                                                                        |
+| Production JavaScript export         | iOS and Android Hermes bytecode exports passed                                                    |
+| TypeScript                           | Passed                                                                                            |
+| Jest                                 | 91 tests passed; 93.60% statements, 90.78% branches in the gated core/application scope           |
+| Lint and formatting                  | Passed on the staged implementation snapshots                                                     |
+| Android real-adapter Maestro         | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture       |
+| Android simulated-TV Maestro         | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget  |
+| Embedded release bundle / Maestro    | Version-code-3 AAB derivative passed normal and 360 × 640 dp / 130% text checks                   |
+| Final EAS workflow                   | Quality/native, signed version-code-4 build and automatic internal submission all passed          |
+| Signed version-code-4 AAB            | Package, upload signature, real adapter, backup, SDK and cleaned permissions verified             |
+| Play internal tester availability    | Active internal release; intended account's invitation verified; phone installation not performed |
+| iOS simulator / Maestro              | Full flow unverified: driver startup/accessibility and development-launcher problems              |
+| Physical TV / Android phone / iPhone | Unavailable; not tested                                                                           |
 
 ## Deployment revision — 2026-11-06
 
 The permanent production identifier is `com.sermadahmad.tvremote`; the simulated build uses `.uitest`. Both new application identities were built locally for Android x86_64 and iOS x86_64 simulator. The final Android permission cleanup rebuilt successfully with all 5 native JUnit tests. Both final Hermes bundle exports, 91 Jest tests and coverage gates, types, lint and formatting passed. Both updated Android Maestro flows passed with the permanent identifiers, including the SDK 58 route-anchor refinement.
 
-Two EAS workflow pilots were triggered from local source archives without pushing Git. Both cloud quality jobs passed, including locked installation, compatibility checks and Android native tests. The first signed production AAB (version code 2) built successfully and its package, production adapter flag, SDK levels and non-debug upload signature were inspected with bundletool, jarsigner and keytool. Its permission review led to blocking unused storage, overlay, biometric and install-referrer permissions. The subsequent signed build and submission status are recorded in [DEPLOYMENT.md](DEPLOYMENT.md).
+EAS workflow runs were triggered from local source archives without pushing Git. Cloud quality jobs passed, including locked installation, compatibility checks and Android native tests. The first signed production AAB (version code 2) built successfully and its package, production adapter flag, SDK levels and non-debug upload signature were inspected with bundletool, jarsigner and keytool. Its permission review led to blocking unused storage, overlay, biometric and install-referrer permissions. The final full pipeline passed all three jobs and automatically submitted the inspected version-code-4 AAB to internal testing; see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-The new Play app record, support email and initial internal tester list were created. The owner connected the Expo repository and granted the publisher service account access. Its managed key successfully submitted version code 3; Play Console reports the internal track Active. The first tester opt-in link remains unavailable during store propagation, so Play installation is unverified. See DEPLOYMENT.md for the complete pipeline run and delivery record.
+The new Play app record, support email and initial internal tester list were created. The owner connected the Expo repository and granted the publisher service account access. Its managed key successfully submitted the app; Play Console reports the internal track Active. The Console's exact internal-test invitation URL opens for `fixemj@gmail.com` and confirms eligibility. An earlier check used the general testing URL; it did not establish internal-test availability. Phone enrollment/installation is unverified. See DEPLOYMENT.md for the complete pipeline run and delivery record.
+
+An additional release smoke passed using a universal APK derived from the exact inspected version-code-3 AAB. This ran the embedded production bundle without Metro: onboarding, real-adapter empty discovery, Remote/Devices/Saved/Settings and Android Back. The derivative was signed locally with the public debug key for emulator installation; the original store AAB and its upload signature were unchanged. Reproduce with `e2e/production-release-smoke.yaml` and e2e/README.md.
+
+A second release inspection used a 360 × 640 dp emulator viewport and 130% system text. Settings, discovery, saved devices, returning to Remote with Android Back, and the persistent tab bar passed. Remote and Settings screenshots were inspected for clipping and spacing. The emulator's original size, density and text scale were restored. This covers those disconnected states; it does not establish screen-reader support or connected-control accessibility on hardware.
 
 ## Automated scope
 
@@ -96,6 +104,6 @@ Record the actual TV manufacturer/model, firmware, Android TV Remote Service ver
 
 The initial displayed-code trust policy is proposed and requires hardware and security review. The control endpoint must present the same pinned public key learned during pairing; a mismatch fails closed. Keystore/Keychain credential lifecycle, backup exclusions, and interrupted native operations require on-device validation. Transport success is not TV-side execution confirmation. There is no certified compatibility list yet.
 
-Debug builds and JavaScript exports do not replace signed release inspection. Android upload signing, permanent distribution identities and signed-AAB inspection are verified. Play tester access/installation, final icons/screenshots, store metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
+Debug builds and JavaScript exports do not replace signed release inspection. Android signing, permanent distribution identities, signed-AAB inspection, full EAS pipeline and internal tester invitation are verified. Phone installation, final icons/screenshots, store metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
 
 The dependency audit reports 31 advisories (30 moderate, 1 low), with no high/critical advisories. These include tooling advisories for glob/minimatch and a deepmerge advisory without a published fix. Do not force Expo/Jest downgrades to silence the audit. Dependency remediation remains a release gate; rerun compatibility/native checks after dependency changes.

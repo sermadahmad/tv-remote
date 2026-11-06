@@ -53,3 +53,5 @@ artifacts/
 # Deployment credentials are managed by Expo, never by Git.
 credentials.json
 google-play-service-account*.json
+tv-remote-publishing-*.json
+tvremote-publisher-key.json

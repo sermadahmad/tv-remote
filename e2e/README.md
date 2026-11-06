@@ -1,6 +1,6 @@
 # Local UI automation
 
-Flows target a development client and Metro on port 8081. Maestro 2.12.1 was used locally. No cloud service is required. Disable Maestro analytics with both environment variables below. An emulator cannot establish compatibility with a real TV.
+The development-client flows use Metro on port 8081. The release flow below uses the application's embedded bundle. Maestro 2.12.1 was used locally; no Maestro cloud service is required. Disable Maestro analytics with both environment variables below. An emulator cannot establish compatibility with a real TV.
 
 ## Android
 
@@ -52,6 +52,26 @@ Use the emulator's actual ABI instead of x86_64 on Apple Silicon. Add `--device 
 Expo SDK 58 accepts reserved `__expo_*` launcher parameters. If the deep link leaves the launcher visible, the production flow enters `http://localhost:8081` in its address field and closes the first-run developer menu. The UI-test flow uses its configured direct launch. Port forwarding must be configured first. Production and UI-test clients use distinct identifiers and explicit schemes (`universaltvremote` and `universaltvremote-uitest`). Generated schemes are disabled because both variants share the Expo project slug `tv-remote`. A flag alone cannot activate the fixture adapter in the production application.
 
 Both Android flows passed unattended locally on 2026-11-06. The rename flow asserts the field value before saving and the saved name afterward. Avoid an unconditional `hideKeyboard` command: when the emulator's software keyboard is already hidden, it can navigate away from the screen.
+
+## Embedded production bundle
+
+`production-release-smoke.yaml` targets an installed release APK and does not use Metro or the development launcher. It passed on the API 35 emulator with the embedded bundle from the inspected production version-code-3 AAB, covering onboarding, real discovery's empty state, all four tabs, and Android Back.
+
+For emulator QA, derive a universal APK with Google's bundletool. The following uses the generated application's public debug key only to sign this local QA derivative; the original AAB retains its verified Expo upload signature. A Play installation uses Google's separate app-signing key.
+
+```sh
+java -jar /path/to/bundletool.jar build-apks \
+  --bundle=artifacts/qa/production-v3.aab \
+  --output=/private/tmp/tvremote-release-qa.apks --mode=universal \
+  --ks=android/app/debug.keystore --ks-key-alias=androiddebugkey \
+  --ks-pass=pass:android --key-pass=pass:android --overwrite
+unzip -p /private/tmp/tvremote-release-qa.apks universal.apk > /private/tmp/tvremote-release-qa.apk
+adb install -r /private/tmp/tvremote-release-qa.apk
+MAESTRO_CLI_NO_ANALYTICS=1 MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true \
+  maestro test e2e/production-release-smoke.yaml --debug-output artifacts/release-qa
+```
+
+Adjust the source AAB filename for later version codes. Debug-signed QA and Play-signed installations cannot replace each other in place. Emulator QA cannot verify Play download eligibility, phone Keystore/Keychain behavior, or real TV compatibility.
 
 ## iOS and limitations
 

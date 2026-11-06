@@ -1,0 +1,25 @@
+appId: com.sermadahmad.tvremote
+name: Production AAB release smoke
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Find my TV
+    timeout: 60000
+- assertNotVisible: 'UI TEST.*'
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- assertVisible: Make yourself at home.
+- extendedWaitUntil:
+    visible: 'No TVs found yet|Connect your phone and TV.*|Allow local network access.*'
+    timeout: 30000
+- tapOn: Remote
+- assertVisible: Choose a TV
+- tapOn: Settings
+- assertVisible: Appearance
+- tapOn: Saved
+- assertVisible: No saved TVs yet.
+- pressKey: Back
+- assertVisible: Choose a TV
+- takeScreenshot: production-aab-release-remote
