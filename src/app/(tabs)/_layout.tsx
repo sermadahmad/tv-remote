@@ -16,7 +16,7 @@ export default function TabLayout() {
         headerShown: false,
         animation: 'none',
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: colors.accent,
+        tabBarActiveTintColor: colors.accentText,
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: { fontSize: tokens.type.caption, fontWeight: '600' },
         tabBarItemStyle: { minHeight: tokens.target },

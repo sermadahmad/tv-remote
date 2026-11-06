@@ -28,7 +28,7 @@ export default function Saved() {
     >
       {!saved.length && (
         <Card>
-          <Bookmark color={colors.accent} />
+          <Bookmark color={colors.accentText} />
           <Copy>No saved TVs yet.</Copy>
           <Copy muted>Pair a TV and it will appear here.</Copy>
           <Button
@@ -39,7 +39,7 @@ export default function Saved() {
       )}
       {saved.map(({ target, nickname }) => (
         <Card key={target.id}>
-          <Tv color={colors.accent} />
+          <Tv color={colors.accentText} />
           <Copy>{nickname}</Copy>
           <Copy muted>{target.host}</Copy>
           <Button

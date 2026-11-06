@@ -24,6 +24,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
+      - run: npm run assets:check
       - run: node scripts/verify-fixtures.mjs
       - run: node scripts/verify-native-linking.mjs
       - run: npm run test:coverage

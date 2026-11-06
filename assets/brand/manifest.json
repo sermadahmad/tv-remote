@@ -1,0 +1,198 @@
+{
+  "fontRevision": "e3a3d4c57d5ecc01453a575621882a384c1995a3",
+  "fontSha256": "78a843fade9d4612a5567302fb595b56976eb5fcebf4fea5a5912d638bafcde3",
+  "assets": [
+    {
+      "path": "logos/symbol-dark.png",
+      "width": 512,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 48
+    },
+    {
+      "path": "logos/wordmark-dark.png",
+      "width": 2048,
+      "height": 256,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "logos/primary-dark.png",
+      "width": 2560,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 76
+    },
+    {
+      "path": "logos/symbol-light.png",
+      "width": 512,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "logos/wordmark-light.png",
+      "width": 2048,
+      "height": 256,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "logos/primary-light.png",
+      "width": 2560,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 56
+    },
+    {
+      "path": "logos/symbol-mono.png",
+      "width": 512,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "logos/wordmark-mono.png",
+      "width": 2048,
+      "height": 256,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "logos/primary-mono.png",
+      "width": 2560,
+      "height": 512,
+      "opaque": false,
+      "safe": false,
+      "colors": 28
+    },
+    {
+      "path": "icons/icon.png",
+      "width": 1024,
+      "height": 1024,
+      "opaque": true,
+      "safe": false,
+      "colors": 51
+    },
+    {
+      "path": "icons/android-foreground.png",
+      "width": 1024,
+      "height": 1024,
+      "opaque": false,
+      "safe": true,
+      "colors": 53
+    },
+    {
+      "path": "icons/android-monochrome.png",
+      "width": 1024,
+      "height": 1024,
+      "opaque": false,
+      "safe": true,
+      "colors": 28
+    },
+    {
+      "path": "icons/android-background.png",
+      "width": 1024,
+      "height": 1024,
+      "opaque": true,
+      "safe": false,
+      "colors": 1
+    },
+    {
+      "path": "icons/favicon.png",
+      "width": 48,
+      "height": 48,
+      "opaque": true,
+      "safe": false,
+      "colors": 29
+    },
+    {
+      "path": "splash/splash.png",
+      "width": 1024,
+      "height": 1024,
+      "opaque": false,
+      "safe": false,
+      "colors": 56
+    },
+    {
+      "path": "illustrations/discovering-dark.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 84
+    },
+    {
+      "path": "illustrations/discovering-light.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 87
+    },
+    {
+      "path": "illustrations/pairing-dark.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 91
+    },
+    {
+      "path": "illustrations/pairing-light.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 93
+    },
+    {
+      "path": "illustrations/no-tv-dark.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 85
+    },
+    {
+      "path": "illustrations/no-tv-light.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 88
+    },
+    {
+      "path": "illustrations/connection-lost-dark.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 92
+    },
+    {
+      "path": "illustrations/connection-lost-light.png",
+      "width": 640,
+      "height": 480,
+      "opaque": false,
+      "safe": false,
+      "colors": 95
+    },
+    {
+      "path": "review/brand-review.png",
+      "width": 1600,
+      "height": 1380,
+      "opaque": true,
+      "safe": false,
+      "colors": 323
+    }
+  ]
+}

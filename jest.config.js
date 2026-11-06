@@ -1,6 +1,13 @@
 module.exports = {
   preset: 'jest-expo',
   watchman: false,
+  // Native builds can run alongside UI checks; never crawl generated projects/artifacts.
+  modulePathIgnorePatterns: [
+    '<rootDir>/android/',
+    '<rootDir>/ios/',
+    '<rootDir>/artifacts/',
+    '<rootDir>/modules/.*/(?:build|\\.build)/',
+  ],
   // Allow the async React Native renderer to settle on hosts also compiling native code.
   testTimeout: 15000,
   moduleNameMapper: {

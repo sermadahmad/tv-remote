@@ -43,7 +43,7 @@ export default function Pairing() {
       subtitle={selected?.name ?? 'Choose a TV from the device list.'}
     >
       <Card>
-        <ShieldCheck size={36} color={colors.accent} />
+        <ShieldCheck size={36} color={colors.accentText} />
         {state.status === 'pairing' ? (
           <PairingForm onSubmit={(code) => connection.submit(code)} />
         ) : state.status === 'error' ? (
@@ -78,7 +78,7 @@ export default function Pairing() {
           <Button label="Choose a TV" onPress={cancel} />
         ) : (
           <>
-            <ActivityIndicator color={colors.accent} />
+            <ActivityIndicator color={colors.accentText} />
             <Copy>
               {state.status === 'reconnecting'
                 ? `Reconnecting · attempt ${state.attempt} of 5`

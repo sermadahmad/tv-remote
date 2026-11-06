@@ -53,7 +53,7 @@ export default function Settings() {
         onPress={() => router.navigate('/saved')}
       />
       <Card>
-        <ShieldCheck color={colors.accent} />
+        <ShieldCheck color={colors.accentText} />
         <Copy>Private, by design</Copy>
         <Copy muted>
           TV control happens on your local network. No account, analytics,

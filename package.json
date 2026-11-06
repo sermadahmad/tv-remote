@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@react-native/jest-preset": "0.88.1",
+    "@resvg/resvg-js": "2.6.2",
     "@testing-library/react-native": "14.1.0",
     "@types/jest": "30.0.0",
     "@types/react": "~19.3.0",
@@ -58,7 +59,9 @@
     "test:coverage": "jest --runInBand --coverage",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm test",
     "doctor": "expo-doctor",
-    "native:generate": "node scripts/generate-protocol.mjs"
+    "native:generate": "node scripts/generate-protocol.mjs",
+    "assets:generate": "node scripts/generate-brand-assets.mjs",
+    "assets:check": "node scripts/generate-brand-assets.mjs --check && node scripts/verify-brand-assets.mjs"
   },
   "private": true,
   "engines": {

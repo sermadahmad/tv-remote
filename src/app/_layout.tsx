@@ -133,7 +133,7 @@ function AppNotice() {
         onPress={() => useDeviceStore.setState({ notice: null })}
         style={styles.dismiss}
       >
-        <Text style={{ color: theme.colors.accent }}>Dismiss</Text>
+        <Text style={{ color: theme.colors.accentText }}>Dismiss</Text>
       </Pressable>
     </View>
   ) : null;

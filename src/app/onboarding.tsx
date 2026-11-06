@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
-import { ArrowUpRight, ShieldCheck, Tv, Wifi } from 'lucide-react-native';
+import { ArrowUpRight, ShieldCheck, Wifi } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '../shared/components/Button';
+import { BrandIllustration, BrandLogo } from '../shared/branding/Brand';
 import { Card, Copy, Screen } from '../shared/components/Screen';
 import { useTheme } from '../shared/theme';
 import { useSettingsStore } from '../store/settingsStore';
@@ -19,22 +20,23 @@ export default function Onboarding() {
       title={'Your TV.\nCloser than ever.'}
       subtitle="A little less searching for the remote. A little more time for what you love."
     >
+      <BrandLogo />
       <View style={[styles.illustration, { backgroundColor: colors.surface }]}>
-        <Tv size={96} color={colors.accent} strokeWidth={1.25} />
+        <BrandIllustration kind="discovering" />
         <View style={[styles.connection, { backgroundColor: colors.raised }]}>
-          <Wifi size={22} color={colors.accent} />
+          <Wifi size={22} color={colors.accentText} />
           <Text style={{ color: colors.text }}>Connected by Wi-Fi</Text>
         </View>
       </View>
       <Card>
-        <Wifi color={colors.accent} />
+        <Wifi color={colors.accentText} />
         <Copy>
           Connect your phone and Android TV or Google TV to the same Wi-Fi
           network.
         </Copy>
       </Card>
       <Card>
-        <ShieldCheck color={colors.accent} />
+        <ShieldCheck color={colors.accentText} />
         <Copy>
           Enter the code shown on your TV to pair. Your connection stays on your
           local network.

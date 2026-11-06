@@ -57,7 +57,7 @@ export default function Devices() {
         />
       )}
       <View style={styles.status}>
-        <Wifi size={18} color={colors.accent} />
+        <Wifi size={18} color={colors.accentText} />
         <Text style={{ color: colors.muted }}>Local Wi-Fi connection</Text>
       </View>
       <View style={styles.section}>
@@ -70,12 +70,12 @@ export default function Devices() {
           onPress={discovery.refresh}
           style={styles.refresh}
         >
-          <RefreshCw size={20} color={colors.accent} />
+          <RefreshCw size={20} color={colors.accentText} />
         </Pressable>
       </View>
       {(discovery.status === 'searching' || discovery.status === 'idle') && (
         <Card>
-          <ActivityIndicator color={colors.accent} />
+          <ActivityIndicator color={colors.accentText} />
           <Copy>Looking for your TV…</Copy>
           <Copy muted>
             Make sure your TV is on and connected to the same network.
@@ -94,7 +94,7 @@ export default function Devices() {
               <View
                 style={[styles.deviceIcon, { backgroundColor: colors.raised }]}
               >
-                <Tv color={colors.accent} size={28} />
+                <Tv color={colors.accentText} size={28} />
               </View>
               <View style={styles.deviceName}>
                 <Text
@@ -117,7 +117,7 @@ export default function Devices() {
       ))}
       {discovery.status === 'empty' && (
         <Card>
-          <Radio color={colors.accent} />
+          <Radio color={colors.accentText} />
           <Copy>No TVs found yet</Copy>
           <Copy muted>
             Check your TV’s network connection. Guest Wi-Fi and router isolation

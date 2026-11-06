@@ -12,3 +12,8 @@ modules/tv-remote-native/proto
 modules/tv-remote-native/ios/Generated
 modules/tv-remote-native/ios/.build
 modules/tv-remote-native/android/build
+
+# Deterministically generated brand sources and exports
+assets/brand/**/*.svg
+assets/brand/manifest.json
+src/shared/branding/artwork.ts
