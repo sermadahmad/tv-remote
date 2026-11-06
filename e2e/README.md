@@ -26,7 +26,7 @@ MAESTRO_CLI_NO_ANALYTICS=1 MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true \
 
 Stop Metro before changing variants. Generate and build the separate simulated-TV application, preserving native caches on subsequent builds:
 
-The test-only development-client configuration opens `http://localhost:8081` directly and disables first-run developer overlays. These options apply only to `APP_VARIANT=ui-test`; they follow the [Expo SDK 58 development-client configuration](https://docs.expo.dev/versions/v58.0.0/sdk/dev-client/).
+The development and test-only development-client configurations open `http://localhost:8081` directly and disables first-run developer overlays. These options apply to `APP_VARIANT=ui-test` and `APP_VARIANT=development`; they follow the [Expo SDK 58 development-client configuration](https://docs.expo.dev/versions/v58.0.0/sdk/dev-client/).
 
 ```sh
 APP_VARIANT=ui-test npx expo prebuild --platform android --no-install --no-clean
@@ -49,7 +49,7 @@ MAESTRO_CLI_NO_ANALYTICS=1 MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true \
 
 Use the emulator's actual ABI instead of x86_64 on Apple Silicon. Add `--device <id>` before `test` when multiple devices are present. `launchApp.clearState` resets only the selected test application's local data. The UI-test flow asserts the persistent simulated-TV banner, cancels pairing, rejects an incorrect code, pairs with `A1B2C3`, exercises navigation and touchpad mode, changes themes, renames, reconnects, and forgets the fixture TV.
 
-Expo SDK 58 accepts reserved `__expo_*` launcher parameters. If the deep link leaves the launcher visible, the production flow enters `http://localhost:8081` in its address field and closes the first-run developer menu. The UI-test flow uses its configured direct launch. Port forwarding must be configured first. Production and UI-test clients use distinct identifiers and explicit schemes (`universaltvremote` and `universaltvremote-uitest`). Generated schemes are disabled because both variants share the Expo project slug `tv-remote`. A flag alone cannot activate the fixture adapter in the production application.
+Expo SDK 58 accepts reserved `__expo_*` launcher parameters. If the deep link leaves the launcher visible, the production flow enters `http://localhost:8081` in its address field and closes the first-run developer menu. The UI-test flow opens its explicit development-client URL after clearing fixture state. Port forwarding must be configured first. Production and UI-test clients use distinct identifiers and explicit schemes (`universaltvremote` and `universaltvremote-uitest`). Generated schemes are disabled because both variants share the Expo project slug `tv-remote`. A flag alone cannot activate the fixture adapter in the production application.
 
 Both Android flows passed unattended locally on 2026-11-06. The rename flow asserts the field value before saving and the saved name afterward. Avoid an unconditional `hideKeyboard` command: when the emulator's software keyboard is already hidden, it can navigate away from the screen.
 
@@ -78,3 +78,7 @@ Adjust the source AAB filename for later version codes. Debug-signed QA and Play
 The iOS native simulator build and hosted Keychain tests passed. Full Maestro iOS execution remains unverified after driver/accessibility startup failures and development-launcher interruptions on iOS 26.4. The YAML flows are checked in for further simulator validation; do not count them as passing iOS coverage.
 
 Fixture credentials live in memory. The fixture flow validates application behavior during one run, not restart persistence, native TLS, discovery permissions, or TV command execution. Final run results are maintained in [TESTING.md](../TESTING.md).
+
+The hardware-fix revision also tests submit controls with the software keyboard enabled: pairing and rename in the fixture flow, plus manual-address validation in the real-adapter flow. Run one UI automation session per device; do not run `uiautomator dump` against that device concurrently. Cold builds and an overloaded emulator caused startup timeouts during diagnosis; the full fixture journey subsequently passed with exclusive automation after native compilation finished.
+
+When real TVs are on the LAN, the production smoke accepts searching, discovery advertisements, empty results or actionable network/permission states; an empty-scan-only assertion would be incorrect. The launch/keyboard smoke does not gate on a terminal scan state; deterministic service tests cover scan deadlines. The hardware-fix rerun observed the Dawlance advertisement from the API 35 emulator after macOS local-network access was enabled.

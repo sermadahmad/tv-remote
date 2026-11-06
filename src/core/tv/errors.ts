@@ -14,7 +14,7 @@ const messages: Record<TVErrorCode, string> = {
   pairingTimeout: 'Pairing expired. Start again to get a new code.',
   invalidCode: 'Enter the six characters shown on the TV, using 0–9 and A–F.',
   authenticationFailed:
-    'Pair this TV again to renew its connection credentials.',
+    'The TV could not authenticate this phone. Try pairing again.',
   identityChanged: 'The TV’s identity changed. Pair again to verify it.',
   connectionLost: 'The connection was interrupted.',
   connectionTimeout: 'The TV did not respond. Check that it is on.',

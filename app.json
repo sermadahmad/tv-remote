@@ -18,6 +18,7 @@
     "android": {
       "package": "com.sermadahmad.tvremote",
       "allowBackup": false,
+      "softwareKeyboardLayoutMode": "resize",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"

@@ -38,8 +38,13 @@ internal class Credentials(context: Context) {
     val reference = "tv-remote-" + UUID.randomUUID().toString()
     if (!preferences.edit().putStringSet("pending-identities", pending() + reference).commit()) throw TVFailure("storageFailure")
     val spec = KeyGenParameterSpec.Builder(reference, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
-      .setKeySize(2048).setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA384, KeyProperties.DIGEST_SHA512)
+      // Conscrypt signs TLS's already-hashed CertificateVerify through the Keystore.
+      // DIGEST_NONE authorizes that operation; TLS still selects and hashes its signature algorithm.
+      .setKeySize(2048).setDigests(KeyProperties.DIGEST_NONE, KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA384, KeyProperties.DIGEST_SHA512)
       .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1, KeyProperties.SIGNATURE_PADDING_RSA_PSS)
+      // Conscrypt also applies PSS padding itself and delegates the final raw RSA signature.
+      // Android maps private-key ENCRYPT_MODE to PURPOSE_SIGN; no decryption purpose is granted.
+      .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
       .setCertificateSubject(X500Principal("CN=Universal TV Remote"))
       .setCertificateSerialNumber(BigInteger(128, java.security.SecureRandom()))
       .setCertificateNotBefore(Date(System.currentTimeMillis() - 60000))
@@ -93,6 +98,10 @@ internal class Credentials(context: Context) {
   @Synchronized fun discard(reference: String) {
     if (Regex("^tv-remote-[0-9a-fA-F-]{36}$").matches(reference)) keyStore.deleteEntry(reference)
     if (!preferences.edit().putStringSet("pending-identities", pending() - reference).commit()) throw TVFailure("storageFailure")
+  }
+  @Synchronized fun discardPending(reference: String) {
+    // Background cleanup can race a successful secret acknowledgment/commit.
+    if (reference in pending()) discard(reference)
   }
   @Synchronized fun forget(deviceId: String) {
     val reference = if (preferences.contains(deviceKey(deviceId))) load(deviceId, null).identity.reference else null

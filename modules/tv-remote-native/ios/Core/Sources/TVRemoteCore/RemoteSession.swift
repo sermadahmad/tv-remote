@@ -64,7 +64,8 @@ final class RemoteSession {
       guard let self else { return }
       do {
         while self.isActive {
-          _ = try self.handle(Remote_RemoteMessage(serializedBytes: self.pipe.read(timeout: 16)))
+          _ = try self.handle(
+            Remote_RemoteMessage(serializedBytes: self.pipe.read(timeout: 16, extendOnActivity: true)))
         }
       } catch {
         if self.isActive {

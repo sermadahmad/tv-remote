@@ -83,9 +83,8 @@ export default function Settings() {
           Remote v2
         </Copy>
         <Copy muted>
-          Physical TV validation is pending. Keyboard input remains unavailable
-          until its field and Unicode behavior are verified. Compatibility
-          varies by model, firmware, and app.
+          TV text input is unavailable. Control support depends on your TV’s
+          model, firmware and active app.
         </Copy>
         <Button
           label="Read introduction again"

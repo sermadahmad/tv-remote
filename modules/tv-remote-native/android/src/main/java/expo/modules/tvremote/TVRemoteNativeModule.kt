@@ -36,6 +36,10 @@ class TVRemoteNativeModule : Module() {
         is java.io.IOException -> "connectionLost"
         else -> "protocolFailure"
       }
+      val context = appContext.reactContext
+      if (context != null && context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+        android.util.Log.w("TVRemoteNative", "Failure $kind: " + generateSequence(error as Throwable?) { it.cause }.take(5).joinToString(" -> ") { it.javaClass.simpleName })
+      }
       // Do not expose underlying exception strings: they can include sensitive protocol input.
       throw CodedException(kind, kind, null)
     }

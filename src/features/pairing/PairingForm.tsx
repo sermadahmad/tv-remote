@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput } from 'react-native';
+import { Keyboard, StyleSheet, Text, TextInput } from 'react-native';
 
 import { failure } from '../../core/tv/errors';
 import { pairingCode } from '../../core/tv/validation';
@@ -22,6 +22,7 @@ export function PairingForm({
     inFlight.current = true;
     try {
       const normalized = pairingCode(code);
+      Keyboard.dismiss();
       setBusy(true);
       setError(null);
       await onSubmit(normalized);
@@ -47,6 +48,8 @@ export function PairingForm({
         autoCorrect={false}
         spellCheck={false}
         keyboardType="ascii-capable"
+        returnKeyType="done"
+        submitBehavior="blurAndSubmit"
         editable={!busy}
         placeholder="· · · · · ·"
         placeholderTextColor={colors.muted}

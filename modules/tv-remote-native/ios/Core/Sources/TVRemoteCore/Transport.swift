@@ -12,6 +12,7 @@ final class TLSPipe {
   private var ready = false
   private var problem: Error?
   private var certificate: SecCertificate?
+  private let activity = SessionActivity()
 
   init(target: TVTarget, pairing: Bool, identity: Identity, pin: Data?) throws {
     guard pairing || pin != nil else { throw TVFailure("authenticationFailed") }
@@ -146,6 +147,7 @@ final class TLSPipe {
       do {
         if let data, !data.isEmpty {
           let messages = try self.decoder.append(data)
+          if !messages.isEmpty { self.activity.record() }
           self.condition.lock()
           self.frames.append(contentsOf: messages)
           let overflow = self.frames.count > 64
@@ -162,12 +164,16 @@ final class TLSPipe {
       }
     }
   }
-  func read(timeout: TimeInterval = 10) throws -> Data {
+  func read(timeout: TimeInterval = 10, extendOnActivity: Bool = false) throws -> Data {
     condition.lock()
     defer { condition.unlock() }
     let deadline = Date().addingTimeInterval(timeout)
     while frames.isEmpty && problem == nil {
-      if !condition.wait(until: deadline) { throw TVFailure("connectionTimeout") }
+      let remaining = extendOnActivity ? activity.remaining() : deadline.timeIntervalSinceNow
+      guard remaining > 0 else { throw TVFailure("connectionTimeout") }
+      // A write can extend the deadline while this wait is in progress.
+      // Re-evaluate after waking instead of treating an old deadline as a disconnect.
+      _ = condition.wait(until: Date().addingTimeInterval(remaining))
     }
     if let problem { throw problem }
     return frames.removeFirst()
@@ -187,6 +193,7 @@ final class TLSPipe {
       throw TVFailure("commandTimeout")
     }
     if let error = result.error { throw error }
+    activity.record()
   }
   func close() {
     fail(TVFailure("connectionLost"))

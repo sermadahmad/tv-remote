@@ -6,27 +6,43 @@ Updated on 2026-11-06. Local checks and manually triggered EAS cloud runs are id
 
 macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, Android compile API 37 / target 36. Android emulator: Pixel 9a, API 35, x86_64. iOS simulators: iPhone 17 Pro and iPhone SE (3rd generation), iOS 26.4. Native builds include the owned Expo module, MMKV/Nitro, SwiftProtobuf, and swift-certificates.
 
-| Check                                | Recorded result                                                                                   |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| Android debug application            | Initial build passed for all four ABIs; final native source rebuilt for x86_64                    |
-| Android native JUnit                 | 5 tests passed                                                                                    |
-| iOS debug simulator application      | Initial arm64/x86_64 build passed; final native source rebuilt for x86_64; linking passed         |
-| Swift package tests on macOS         | 7 tests passed                                                                                    |
-| Hosted iOS Keychain XCTest           | 3 tests passed with a signed simulator host                                                       |
-| Expo Doctor                          | 20/20 checks passed                                                                               |
-| Expo dependency compatibility        | Up to date                                                                                        |
-| Production JavaScript export         | iOS and Android Hermes bytecode exports passed                                                    |
-| TypeScript                           | Passed                                                                                            |
-| Jest                                 | 91 tests passed; 93.60% statements, 90.78% branches in the gated core/application scope           |
-| Lint and formatting                  | Passed on the staged implementation snapshots                                                     |
-| Android real-adapter Maestro         | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture       |
-| Android simulated-TV Maestro         | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget  |
-| Embedded release bundle / Maestro    | Version-code-3 AAB derivative passed normal and 360 × 640 dp / 130% text checks                   |
-| Final EAS workflow                   | Quality/native, signed version-code-4 build and automatic internal submission all passed          |
-| Signed version-code-4 AAB            | Package, upload signature, real adapter, backup, SDK and cleaned permissions verified             |
-| Play internal tester availability    | Active internal release; intended account's invitation verified; phone installation not performed |
-| iOS simulator / Maestro              | Full flow unverified: driver startup/accessibility and development-launcher problems              |
-| Physical TV / Android phone / iPhone | Unavailable; not tested                                                                           |
+| Check                             | Recorded result                                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Android debug application         | Initial all-ABI build passed; hardware fixes built for arm64 phone and x86_64 fixture                        |
+| Android native JUnit              | 7 tests passed                                                                                               |
+| iOS debug simulator application   | Initial arm64/x86_64 build passed; hardware fixes and KeepAwake linked in x86_64 simulator                   |
+| Swift package tests on macOS      | 9 tests passed                                                                                               |
+| Hosted iOS Keychain XCTest        | 3 tests passed with a signed simulator host                                                                  |
+| Expo Doctor                       | 20/20 checks passed                                                                                          |
+| Expo dependency compatibility     | Up to date                                                                                                   |
+| Production JavaScript export      | iOS and Android Hermes bytecode exports passed                                                               |
+| TypeScript                        | Passed                                                                                                       |
+| Jest                              | 100 tests passed; 93.70% statements, 91.03% branches in the gated core/application scope                     |
+| Lint and formatting               | Passed on the staged implementation snapshots                                                                |
+| Android real-adapter Maestro      | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture                  |
+| Android simulated-TV Maestro      | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget             |
+| Embedded release bundle / Maestro | Version-code-3 AAB derivative passed normal and 360 × 640 dp / 130% text checks                              |
+| Final EAS workflow                | Quality/native, signed version-code-4 build and automatic internal submission all passed                     |
+| Signed version-code-4 AAB         | Package, upload signature, real adapter, backup, SDK and cleaned permissions verified                        |
+| Play internal tester availability | Active internal release; intended account's invitation verified; phone installation not performed            |
+| iOS simulator / Maestro           | Full flow unverified: driver startup/accessibility and development-launcher problems                         |
+| Physical Android phone / TV       | Android 14 CPH2363: discovery/pairing, pinned control, sustained input, lifecycle and keyboard checks passed |
+| Android Keystore instrumentation  | 2 physical-phone tests passed: non-exportable TLS signing/persistence/deletion and off-main-thread cleanup   |
+| Physical iPhone / TV              | Unavailable; not tested                                                                                      |
+
+## Android hardware fixes — 2026-11-06
+
+Phone: CPH2363 (OP533FL1), Android 14 / API 34, arm64. TV advertises `DAWLANCE GSMART 4KTV`; exact model, firmware and Android TV Remote Service version are pending. Both devices use the same Wi-Fi LAN. Tests use the isolated **Universal TV Remote Dev** package `com.sermadahmad.tvremote.dev` and the real native adapter. The existing Play version-code-4 release does not contain these fixes.
+
+The original pairing failure reproduced before any protocol request: Android's Conscrypt client-certificate operation failed with Keystore `INCOMPATIBLE_DIGEST`. Authorizing prehashed signing exposed its second raw-signature requirement (`INCOMPATIBLE_PADDING_MODE`). Both required authorizations are now present without exporting keys or changing TLS trust. The updated app reached request/options/configuration and the TV code exchange. The user entered the displayed code directly on the phone and confirmed connection; the app received TV volume events, establishing that the pinned control endpoint also connected. No pairing code is retained in logs or this record.
+
+Both isolated library instrumentation tests passed on the physical phone (Android 14). The signing/persistence test also passed on the API 35 emulator; the additional cleanup test was then added and passed on the phone. It exercises both PKCS#1 prehashed and raw RSA private-key paths used by Conscrypt, validates public-key verification, asserts that the private key has no exported encoding, reopens committed metadata and verifies credential deletion. JVM-only protocol tests did not exercise Android Keystore and therefore could not catch the original bug.
+
+New JavaScript tests verify phone-keyboard dismissal/Done submission and that authentication, identity and permission failures survive lifecycle resume until explicit retry. Default-route network callbacks no longer restart the connection coordinator. Shared forms now use a keyboard-avoiding scroll container for SDK 58 edge-to-edge windows. Expo keep-awake applies while the app is visible; the temporary USB stay-awake preference used during diagnosis was restored to its original value, `0`.
+
+The user confirmed Home, Back and volume effects on the TV. TV-originated feedback verified volume 9 → 10 → 9. With the TV on and reachable, 40 alternating navigation commands over 165.6 seconds stayed connected; live native logs showed the same control session and heartbeat gaps longer than 16 seconds during input. This exercises the corrected bidirectional idle policy. An earlier run lost TV reachability and exhausted the bounded retries; after the user confirmed the TV was on, explicit reconnect succeeded without another code. Background/foreground recovery also passed with the same Android process ID and no repeat of the main-thread TLS crash; the app reconnected using saved credentials. A later app restart also reconnected without entering another code. Phone keyboard inspection verified the full field, inline private-address validation message and submit button above the keyboard, including after discovery changes the content height. All four touchpad gestures were exercised without disconnecting; component tests assert the requested reversed key mapping. Settings/Remote tab switching preserved the connection and touchpad mode. Media playback, standby/wake, network loss while using USB, phone restart, multiple-TV switching and physical forgetting/re-pairing remain unverified. The physical iPhone and full model/version matrix remain open.
+
+The final hardware-fix source passed type checking, lint, formatting, all 100 Jest tests and the 90%/85% coverage gates, Expo Doctor 20/20, SDK-matrix dependency checks, fixture/native registration checks, Android arm64 development and x86_64 production builds, and an iOS x86_64 simulator build. Both final production Hermes exports passed. Both Android Maestro flows passed: the fixture journey asserts Pair and Save Name are visible with the software keyboard open; the production flow exercises real discovery, manual-IP validation with the keyboard open, and all four tabs. Its scan assertion accepts searching, actual advertisements, empty results or an actionable permission/network state. Scan deadlines are covered by deterministic service tests. Early emulator runs timed out during cold startup or used an incorrect empty-only scan expectation; those failures are not counted as passes.
 
 ## Deployment revision — 2026-11-06
 
@@ -67,6 +83,18 @@ cd android
 ./gradlew :tv-remote-native:testDebugUnitTest :app:assembleDebug --console=plain
 ```
 
+Android Keystore regression (separate library test UID; requires an emulator or phone):
+
+```sh
+./android/gradlew -p android :tv-remote-native:assembleDebugAndroidTest
+adb -s <serial> install -r modules/tv-remote-native/android/build/outputs/apk/androidTest/debug/tv-remote-native-debug-androidTest.apk
+adb -s <serial> shell am instrument -w -r \
+  -e class expo.modules.tvremote.CredentialTlsTest \
+  expo.modules.tvremote.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+This test cannot establish TV interoperability. Do not clear a user's app data for testing; use the isolated development application described in README.
+
 From the repository root on macOS:
 
 ```sh
@@ -86,19 +114,20 @@ The credential script requires the `xcodeproj` Ruby gem supplied by CocoaPods. I
 
 Record the actual TV manufacturer/model, firmware, Android TV Remote Service version, phone model/OS, app revision, network setup, date, and result for each row. An emulator is not a substitute for either physical phone platform.
 
-| Scenario                                                        | Android phone         | iPhone                |
-| --------------------------------------------------------------- | --------------------- | --------------------- |
-| Discovery and permission denial/recovery                        | Not tested            | Not tested            |
-| Six-character pairing, wrong code, timeout, cancellation        | Not tested            | Not tested            |
-| Pairing/control certificate continuity; reject changed identity | Not tested            | Not tested            |
-| Reconnect after app and phone restart                           | Not tested            | Not tested            |
-| Navigation, tap/hold/release, rapid input                       | Not tested            | Not tested            |
-| Volume/mute and media in multiple TV applications               | Not tested            | Not tested            |
-| Connected power and standby/wake limitations                    | Not tested            | Not tested            |
-| Keyboard counters, Unicode, deletion, focus, app behavior       | Not implemented       | Not implemented       |
-| Network loss/change and Wi-Fi without internet                  | Not tested            | Not tested            |
-| Background, foreground, switching, forgetting, credential reset | Not tested            | Not tested            |
-| Small/large phones, screen reader, dynamic text, reduced motion | Pending device review | Pending device review |
+| Scenario                                                        | Android phone                                                                | iPhone          |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------- |
+| Discovery and permission denial/recovery                        | Discovery passed; denial pending                                             | Not tested      |
+| Pairing, wrong code, timeout, cancellation                      | Pairing passed; negative paths tested with fixtures                          | Not tested      |
+| Pairing/control identity continuity; changed identity rejection | Continuity passed; physical rejection pending                                | Not tested      |
+| Reconnect after app and phone restart                           | App restart passed; phone reboot pending                                     | Not tested      |
+| Navigation, hold/release and rapid input                        | Home/Back and 40 sustained navigation taps passed; holds/rapid input pending | Not tested      |
+| Volume/mute and media across TV apps                            | TV volume/mute feedback observed; media pending                              | Not tested      |
+| Connected power and standby/wake                                | Not tested                                                                   | Not tested      |
+| Phone keyboard avoidance and submission                         | Field, validation and submit button passed on CPH2363                        | Not tested      |
+| TV keyboard counters, Unicode, deletion and focus               | Not implemented                                                              | Not implemented |
+| Network changes and Wi-Fi without internet                      | TV-unreachable recovery observed; remaining cases pending                    | Not tested      |
+| Background, foreground, switching and forgetting                | Lifecycle passed; switching/forgetting tested with fixtures                  | Not tested      |
+| Small/large phones, screen reader, dynamic text, reduced motion | Partial simulator review; full device review pending                         | Not tested      |
 
 ## Remaining release gates
 

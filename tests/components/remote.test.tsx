@@ -1,7 +1,34 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import {
+  PanResponder,
+  type GestureResponderEvent,
+  type PanResponderGestureState,
+} from 'react-native';
 
 import { DirectionPad } from '../../src/features/remote/DirectionPad';
+import { Touchpad } from '../../src/features/remote/Touchpad';
 import { testSession } from '../mocks/FakeTVAdapter';
+
+test.each([
+  [80, 4, 'left'],
+  [-80, 4, 'right'],
+  [4, 80, 'up'],
+  [4, -80, 'down'],
+  [5, 5, 'select'],
+])('touchpad gesture (%s, %s) dispatches %s once', async (dx, dy, key) => {
+  const factory = jest.spyOn(PanResponder, 'create');
+  const send = jest.fn();
+  await render(<Touchpad send={send} />);
+  const release = factory.mock.calls.at(-1)?.[0].onPanResponderRelease;
+  await act(async () =>
+    release?.(
+      {} as GestureResponderEvent,
+      { dx, dy } as PanResponderGestureState,
+    ),
+  );
+  expect(send.mock.calls).toEqual([[{ type: 'key', key, action: 'tap' }]]);
+  factory.mockRestore();
+});
 
 test('dispatches one tap and respects unsupported controls', async () => {
   const send = jest.fn();

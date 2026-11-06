@@ -3,6 +3,7 @@ import { ArrowRight, Radio, RefreshCw, Tv, Wifi } from 'lucide-react-native';
 import { useState } from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
   Linking,
   Pressable,
   StyleSheet,
@@ -32,6 +33,16 @@ export default function Devices() {
     useDeviceStore.setState({ selected: target });
     router.push('/pairing');
     void connection.select(target).catch(report);
+  };
+  const connectManually = (): void => {
+    try {
+      const target = manualTarget(address);
+      Keyboard.dismiss();
+      setError(null);
+      select(target);
+    } catch (error) {
+      setError(failure(error).message);
+    }
   };
   return (
     <Screen
@@ -146,10 +157,16 @@ export default function Devices() {
             placeholder="192.168.1.25"
             placeholderTextColor={colors.muted}
             value={address}
-            onChangeText={setAddress}
+            onChangeText={(value) => {
+              setAddress(value);
+              setError(null);
+            }}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="numbers-and-punctuation"
+            returnKeyType="go"
+            submitBehavior="blurAndSubmit"
+            onSubmitEditing={connectManually}
             style={[
               styles.input,
               { color: colors.text, borderColor: colors.line },
@@ -160,16 +177,7 @@ export default function Devices() {
               {error}
             </Text>
           )}
-          <Button
-            label="Connect to this address"
-            onPress={() => {
-              try {
-                select(manualTarget(address));
-              } catch (error) {
-                setError(failure(error).message);
-              }
-            }}
-          />
+          <Button label="Connect to this address" onPress={connectManually} />
         </Card>
       )}
       <Copy muted>

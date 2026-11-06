@@ -3,6 +3,7 @@ name: Explicit simulated TV journey
 ---
 - launchApp:
     clearState: true
+- openLink: 'universaltvremote-uitest://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081'
 - extendedWaitUntil:
     visible: 'UI TEST.*SIMULATED TV.*'
     timeout: 120000
@@ -17,7 +18,9 @@ name: Explicit simulated TV journey
 - tapOn: Connect to Living Room · Simulated
 - tapOn: TV pairing code
 - inputText: '000000'
-- pressKey: Enter
+- assertVisible: Pair securely
+- takeScreenshot: simulated-pairing-keyboard
+- tapOn: Pair securely
 - assertVisible: 'Enter the six characters shown on the TV.*'
 - tapOn:
     text: Dismiss message
@@ -54,9 +57,8 @@ name: Explicit simulated TV journey
 - eraseText: 1
 - inputText: Lounge
 - assertVisible: Lounge
-- pressKey: Enter
-- scrollUntilVisible:
-    element: Save name
+- assertVisible: Save name
+- takeScreenshot: simulated-rename-keyboard
 - tapOn: Save name
 - assertVisible: Lounge
 - tapOn: Connect to Lounge

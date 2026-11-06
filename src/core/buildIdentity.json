@@ -3,5 +3,6 @@
   "slug": "tv-remote",
   "projectId": "5a67c905-432c-40df-a17c-cc9d12228fcb",
   "applicationId": "com.sermadahmad.tvremote",
+  "developmentApplicationId": "com.sermadahmad.tvremote.dev",
   "uiTestApplicationId": "com.sermadahmad.tvremote.uitest"
 }

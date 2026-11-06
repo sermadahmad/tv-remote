@@ -20,6 +20,10 @@ Discovery has a separate lifecycle. A focused device screen starts a 15-second b
 
 The adapter translates AbortSignal into native operation cancellation. Events contain session identifiers so old disconnects and capability updates cannot mutate the selected session.
 
+Default-route Wi-Fi notifications refresh discovery without starting a second connection attempt. The coordinator owns recovery; authentication, identity and permission failures remain visible across background/foreground until an explicit user action. This prevents repeated network notifications from masking a failed pairing exchange with a new spinner.
+
+Shared screens use a keyboard-avoiding scroll container on both platforms. Explicit field submission dismisses the phone keyboard before the asynchronous operation. The root owns Expo keep-awake while the app is visible; no persistent system power preference is required.
+
 ## State and storage
 
 Zustand contains serializable device, connection, discovery, preference, and UI state. MMKV persists nonsensitive device metadata, local names, onboarding, and preferences. SecureStore persists opaque native credential references using device-only accessibility on iOS.

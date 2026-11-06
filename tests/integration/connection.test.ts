@@ -311,6 +311,31 @@ test('bounds retries and never retries authentication failures', async () => {
   });
   expect(jest.getTimerCount()).toBe(0);
 });
+test.each([
+  'authenticationFailed',
+  'identityChanged',
+  'permissionDenied',
+] as const)(
+  'preserves %s until an explicit retry, including across background and foreground',
+  async (code) => {
+    const { adapter, coordinator } = setup();
+    adapter.error = new TVError(code);
+    await coordinator.select(television);
+    const attempts = adapter.connectionCount;
+    await coordinator.resume();
+    await coordinator.suspend();
+    await coordinator.resume();
+    expect(adapter.connectionCount).toBe(attempts);
+    expect(coordinator.snapshot()).toMatchObject({
+      status: 'error',
+      error: { code },
+    });
+    expect(jest.getTimerCount()).toBe(0);
+    adapter.error = null;
+    await coordinator.select(television);
+    expect(coordinator.snapshot().status).toBe('connected');
+  },
+);
 test('reconnects without replaying commands', async () => {
   const { adapter, coordinator } = setup();
   await coordinator.select(television);

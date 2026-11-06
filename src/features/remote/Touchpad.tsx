@@ -17,11 +17,11 @@ export function Touchpad({ send }: { send: (command: RemoteCommand) => void }) {
             key =
               Math.abs(gesture.dx) > Math.abs(gesture.dy)
                 ? gesture.dx > 0
-                  ? 'right'
-                  : 'left'
+                  ? 'left'
+                  : 'right'
                 : gesture.dy > 0
-                  ? 'down'
-                  : 'up';
+                  ? 'up'
+                  : 'down';
           send({ type: 'key', key, action: 'tap' });
         },
       }),

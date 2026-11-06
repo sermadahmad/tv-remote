@@ -35,7 +35,25 @@ name: Real adapter simulator launch
     optional: true
 - assertVisible: Make yourself at home.
 - extendedWaitUntil:
-    visible: 'No TVs found yet|Connect your phone and TV.*|Allow local network access.*'
+    visible: 'Looking for your TV.*|No TVs found yet|Connect to .*|Connect your phone and TV.*|Allow local network access.*'
     timeout: 30000
 - assertNotVisible: '.*Simulated.*'
 - takeScreenshot: production-discovery
+- tapOn: Enter TV IP address
+- scrollUntilVisible:
+    element: TV IP address
+- tapOn: TV IP address
+- inputText: 8.8.8.8
+- assertVisible: Connect to this address
+- takeScreenshot: production-address-keyboard
+- tapOn: Connect to this address
+- assertVisible: 'Enter a private local IP address.*'
+- back
+- tapOn: Remote
+- assertVisible: Choose a TV
+- tapOn: Saved
+- assertVisible: No saved TVs yet.
+- tapOn: Settings
+- assertVisible: Match system · Selected
+- tapOn: Remote
+- assertVisible: Choose a TV

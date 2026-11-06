@@ -1,7 +1,11 @@
 {
   "cli": { "version": ">=27.5.0", "appVersionSource": "remote" },
   "build": {
-    "development": { "developmentClient": true, "distribution": "internal" },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": { "APP_VARIANT": "development" }
+    },
     "ui-test": {
       "distribution": "internal",
       "env": { "APP_VARIANT": "ui-test" },

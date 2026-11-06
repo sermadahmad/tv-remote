@@ -15,9 +15,9 @@ The implementation follows the accepted architecture and prioritizes transport c
 
 ## Hardware update
 
-The user clarified that no TV or physical phone is currently available and authorized emulator/simulator validation. Hardware gates therefore remain unverified. No UI automation or fake adapter result may be presented as real TV communication.
+Initially no TV or physical phone was available, so the user authorized emulator/simulator validation. On 2026-11-06 an Android 14 phone and Dawlance TV became available on the same Wi-Fi network. Discovery and displayed-code pairing now work after correcting Android Keystore TLS signing authorizations. The user confirmed that Home, Back and volume work on the TV. The full hardware matrix, exact TV version details, physical iPhone testing and security review remain open. No UI automation or fake adapter result may be presented as real TV communication.
 
-The original phase 3 hardware exit criterion cannot be met in this environment. Subsequent UI work proceeds against the explicitly identified fixture build under the user's simulator authorization. This is a development-scope adjustment, not a pass of the transport, security, or release hardware gates. The final app disables keyboard input while application-specific IME behavior is unverified.
+The original phase 3 exit criterion requires both phone platforms and is not yet met. The explicitly identified fixture build remains available for deterministic UI tests. TV text input remains disabled while application-specific IME behavior is unverified; the user's current keyboard report concerns phone input fields and is addressed separately with keyboard avoidance and explicit submission.
 
 ## Local commits
 
@@ -42,3 +42,7 @@ These are development deliverables. Android upload signing and a signed cloud bu
 `b6eaba6` adds the persistent Remote, Devices, Saved and Settings tabs, pairing returns, focus-scoped discovery and session-guarded key release. `e55c206` applies the SDK 58 route anchor and card onboarding configuration after emulator verification. Types, lint, formatting, 91 Jest tests, both Hermes bundles, Android/iOS native builds and both Android Maestro flows passed with the permanent application identifiers.
 
 `f2c00f2` links the existing Expo project, isolates the simulated package and scheme, manages Android version codes remotely, and configures a checks → signed AAB → exact-build internal submission workflow. Cloud runs upload a local source archive; they do not push commits. The owner resolved the account grants. A complete workflow from that commit passed and automatically submitted the inspected version-code-4 AAB. The intended account's internal-test invitation is verified; physical installation and TV validation remain open. Full results are maintained in DEPLOYMENT.md.
+
+## First Android hardware revision
+
+The diagnostic build has a separate `.dev` application ID and always uses the real adapter. Android Keystore TLS signing, phone keyboard avoidance, foreground keep-awake, persistent authentication errors and reversed touchpad axes are implemented. Hardware diagnosis also identified an inbound-only idle timer and TLS cleanup on Android's main thread; the fixes count traffic in both directions and detach stale resources before asynchronous cleanup. Check TESTING.md for actual build/test and hardware results. The existing internal store release does not yet include this revision.

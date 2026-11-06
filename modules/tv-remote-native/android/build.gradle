@@ -9,7 +9,10 @@ version = '0.1.0'
 
 android {
   namespace 'expo.modules.tvremote'
-  defaultConfig { minSdkVersion 24 }
+  defaultConfig {
+    minSdkVersion 24
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+  }
   sourceSets { main { proto { srcDir '../proto' } } }
   testOptions { unitTests.returnDefaultValues = true }
 }
@@ -17,6 +20,8 @@ android {
 dependencies {
   implementation 'com.google.protobuf:protobuf-javalite:4.36.2'
   testImplementation 'junit:junit:4.13.2'
+  androidTestImplementation 'androidx.test:runner:1.7.0'
+  androidTestImplementation 'androidx.test.ext:junit:1.3.0'
 }
 
 protobuf {

@@ -260,10 +260,15 @@ export class ConnectionCoordinator {
   }
   async suspend(): Promise<void> {
     this.paused = true;
+    if (this.state.status === 'error') {
+      this.invalidate();
+      return;
+    }
     await this.disconnect();
   }
   async resume(): Promise<void> {
     this.paused = false;
+    if (this.state.status === 'error' && !this.state.error.retryable) return;
     const target = this.target ?? this.repository.selected()?.target;
     if (target) await this.select(target);
   }

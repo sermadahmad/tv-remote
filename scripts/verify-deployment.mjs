@@ -17,13 +17,16 @@ const originalVariant = process.env.APP_VARIANT;
 const originalTarget = process.env.ANDROID_TARGET_SDK;
 try {
   process.env.ANDROID_TARGET_SDK = '36';
-  for (const variant of ['production', 'ui-test']) {
+  for (const variant of ['production', 'ui-test', 'development']) {
     process.env.APP_VARIANT = variant;
     const { exp } = getConfig(process.cwd());
     const testing = variant === 'ui-test';
+    const development = variant === 'development';
     const applicationId = testing
       ? identity.uiTestApplicationId
-      : identity.applicationId;
+      : development
+        ? identity.developmentApplicationId
+        : identity.applicationId;
     assert.equal(exp.owner, identity.owner);
     assert.equal(exp.slug, identity.slug);
     assert.equal(exp.extra.eas.projectId, identity.projectId);
@@ -47,13 +50,18 @@ try {
       );
     assert.equal(
       exp.scheme,
-      testing ? 'universaltvremote-uitest' : 'universaltvremote',
+      testing
+        ? 'universaltvremote-uitest'
+        : development
+          ? 'universaltvremote-dev'
+          : 'universaltvremote',
     );
     const devClient = exp.plugins.find(
       (entry) => Array.isArray(entry) && entry[0] === 'expo-dev-client',
     );
     assert.equal(devClient?.[1]?.addGeneratedScheme, false);
-    if (!testing) assert.equal(devClient[1].defaultLaunchURL, undefined);
+    if (!testing && !development)
+      assert.equal(devClient[1].defaultLaunchURL, undefined);
   }
   assert.notEqual(identity.applicationId, identity.uiTestApplicationId);
   assert.equal(eas.cli.appVersionSource, 'remote');

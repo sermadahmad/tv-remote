@@ -4,7 +4,7 @@ A native Android/iOS remote for compatible Android TV and Google TV devices on t
 
 The Kotlin and Swift adapters implement Bonjour/NSD discovery, RSA client identities, hexadecimal pairing, pinned TLS, Protobuf framing, startup negotiation, ping responses, and key injection. The app includes onboarding, discovery/manual address entry, pairing, a D-pad/touchpad remote, saved devices, and settings.
 
-**Status: development implementation, not a hardware-validated release.** No physical TV or phone was available. Simulator and fixture results do not establish TV compatibility. Keyboard input is unavailable until IME behavior is validated. Standby/wake and individual controls remain subject to TV firmware and application behavior. See [TESTING.md](TESTING.md) for actual results and outstanding gates.
+**Status: development implementation with initial Android hardware validation.** Discovery, pairing and pinned control connected on an Android 14 phone and a TV advertising `DAWLANCE GSMART 4KTV`. The full hardware matrix and physical iPhone testing remain open. TV text input is unavailable until IME behavior is validated. Phone input forms avoid the soft keyboard, and the app keeps its screen awake while visible. Standby/wake and individual controls remain subject to TV firmware and application behavior. See [TESTING.md](TESTING.md) for actual results and outstanding gates.
 
 ## Run locally
 
@@ -12,13 +12,15 @@ Use Node 24.19+, Java 17, Android SDK platform 37, and Xcode 26.4 with CocoaPods
 
 ```sh
 npm ci
-npx expo prebuild
-npm run ios
+APP_VARIANT=development npx expo prebuild
+APP_VARIANT=development npm run ios
 # Or, with an Android emulator/device:
-npm run android
+APP_VARIANT=development npm run android
 ```
 
 Subsequent JavaScript development uses `npm start`. Native code or configuration changes require rebuilding the development client. SDK 58 prebuild recreates native directories by default; use `--no-clean` for an incremental configuration sync. Generated root `ios/` and `android/` projects are ignored; edit Expo configuration and the local module instead. The permanent application identifier is `com.sermadahmad.tvremote`. The project is linked to `sermadahmad/tv-remote` on Expo. Older development identifiers install as separate applications; pairing credentials are not migrated.
+
+For hardware diagnostics, use `APP_VARIANT=development` for prebuild, native runs and Metro. This installs **Universal TV Remote Dev** as `com.sermadahmad.tvremote.dev` with scheme `universaltvremote-dev`, alongside the store app. It always uses the real adapter. Start Metro with `APP_VARIANT=development npm start -- --scheme universaltvremote-dev`; Android devices need `adb -s <serial> reverse tcp:8081 tcp:8081`. Pair separately in each installation. Debug-only native logs record pairing stages and exception classes without codes or key material. Production builds do not emit those diagnostics.
 
 If Watchman stalls on generated native files, start Metro with `TVREMOTE_DISABLE_WATCHMAN=1 npm start`. For an Android emulator, `adb reverse tcp:8081 tcp:8081` lets the development client use `http://localhost:8081`. The E2E flows also handle entering this address in the development launcher.
 

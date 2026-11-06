@@ -4,16 +4,23 @@ import buildIdentity from './src/core/buildIdentity.json';
 
 export default function appConfig({ config }: ConfigContext): ExpoConfig {
   const uiTest = process.env.APP_VARIANT === 'ui-test';
+  const development = process.env.APP_VARIANT === 'development';
   const targetSdk = process.env.ANDROID_TARGET_SDK === '37' ? 37 : 36;
   const identifier = uiTest
     ? buildIdentity.uiTestApplicationId
-    : buildIdentity.applicationId;
+    : development
+      ? buildIdentity.developmentApplicationId
+      : buildIdentity.applicationId;
   return {
     ...config,
-    name: 'Universal TV Remote',
+    name: development ? 'Universal TV Remote Dev' : 'Universal TV Remote',
     slug: buildIdentity.slug,
     owner: buildIdentity.owner,
-    scheme: uiTest ? 'universaltvremote-uitest' : 'universaltvremote',
+    scheme: uiTest
+      ? 'universaltvremote-uitest'
+      : development
+        ? 'universaltvremote-dev'
+        : 'universaltvremote',
     ios: { ...config.ios, bundleIdentifier: identifier },
     android: {
       ...config.android,
@@ -45,7 +52,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
         'expo-dev-client',
         {
           addGeneratedScheme: false,
-          ...(uiTest
+          ...(uiTest || development
             ? {
                 defaultLaunchURL: 'http://localhost:8081',
                 skipOnboarding: true,

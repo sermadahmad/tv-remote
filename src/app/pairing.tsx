@@ -34,9 +34,11 @@ export default function Pairing() {
   return (
     <Screen
       title={
-        state.status === 'pairing'
-          ? 'A small introduction.'
-          : 'Connecting to your TV.'
+        state.status === 'error'
+          ? 'Couldn’t connect to your TV.'
+          : state.status === 'pairing'
+            ? 'A small introduction.'
+            : 'Connecting to your TV.'
       }
       subtitle={selected?.name ?? 'Choose a TV from the device list.'}
     >

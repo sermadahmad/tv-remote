@@ -10,9 +10,11 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.SSLSocket
 
-internal class RemoteSession(val id: String, val deviceId: String, private val socket: SSLSocket, private val emit: (Map<String, Any>) -> Unit) {
+internal class RemoteSession(val id: String, val deviceId: String, private val socket: SSLSocket, private val emit: (Map<String, Any>) -> Unit, private val debug: Boolean = false) {
   private val active = AtomicBoolean(true)
   private val output = socket.outputStream
+  private val activity = SessionActivity()
+  private val input = ActivityInputStream(socket.inputStream, activity)
   private val writer = ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, ArrayBlockingQueue(32))
   private val held = mutableSetOf<String>()
   private val enqueueLock = Any()
@@ -36,11 +38,12 @@ internal class RemoteSession(val id: String, val deviceId: String, private val s
   fun payload(): Map<String, Any> = mapOf("sessionId" to id, "deviceId" to deviceId, "capabilities" to capabilities())
 
   fun start() {
-    socket.soTimeout = 16000
+    socket.soTimeout = 1000
     Thread({
       try {
         while (active.get()) {
-          val message = Remotemessage.RemoteMessage.parseFrom(Framing.read(socket.inputStream))
+          val message = Remotemessage.RemoteMessage.parseFrom(Framing.read(input))
+          activity.record()
           val response = Remotemessage.RemoteMessage.newBuilder()
           when {
             message.hasRemoteConfigure() -> {
@@ -50,8 +53,11 @@ internal class RemoteSession(val id: String, val deviceId: String, private val s
               ).build()
             }
             message.hasRemoteSetActive() -> response.remoteSetActive = Remotemessage.RemoteSetActive.newBuilder().setActive(features).build()
-            message.hasRemotePingRequest() -> response.remotePingResponse = Remotemessage.RemotePingResponse.newBuilder().setVal1(message.remotePingRequest.val1).build()
-            message.hasRemoteStart() -> { started = true; ready.complete(Unit) }
+            message.hasRemotePingRequest() -> {
+              if (debug) android.util.Log.d("TVRemoteNative", "Control ping received")
+              response.remotePingResponse = Remotemessage.RemotePingResponse.newBuilder().setVal1(message.remotePingRequest.val1).build()
+            }
+            message.hasRemoteStart() -> { started = true; ready.complete(Unit); if (debug) android.util.Log.d("TVRemoteNative", "Control started") }
             message.hasRemoteSetVolumeLevel() -> {
               val volume = message.remoteSetVolumeLevel
               if (volume.volumeMax > 0) emit(mapOf("type" to "volume", "sessionId" to id, "level" to volume.volumeLevel, "max" to volume.volumeMax, "muted" to volume.volumeMuted))
@@ -60,14 +66,15 @@ internal class RemoteSession(val id: String, val deviceId: String, private val s
           }
           if (response.build().serializedSize > 0) write(response.build())
         }
-      } catch (_: Exception) {
+      } catch (error: Exception) {
+        if (debug && active.get()) android.util.Log.d("TVRemoteNative", "Control reader stopped: ${error.javaClass.simpleName}; idleMs=${activity.idleMillis()}")
         ready.completeExceptionally(TVFailure("connectionLost"))
         if (active.get()) { close(); emit(mapOf("type" to "disconnected", "sessionId" to id)) }
       }
     }, "tv-remote-reader").start()
     try { ready.get(10, TimeUnit.SECONDS) } catch (_: Exception) { close(); throw TVFailure("connectionTimeout") }
   }
-  @Synchronized private fun write(message: Remotemessage.RemoteMessage) { Framing.write(output, message) }
+  @Synchronized private fun write(message: Remotemessage.RemoteMessage) { Framing.write(output, message); activity.record() }
 
   fun send(command: String) {
     val data = JSONObject(command)
@@ -132,7 +139,7 @@ internal class RemoteSession(val id: String, val deviceId: String, private val s
       throw TVFailure("connectionLost")
     }
   }
-  fun close() { if (active.compareAndSet(true, false)) { socket.close(); writer.shutdownNow() } }
+  fun close() { if (active.compareAndSet(true, false)) { writer.shutdownNow(); ResourceCleanup.run { try { socket.close() } catch (_: java.io.IOException) {} } } }
   companion object {
     val keyCodes = mapOf("up" to 19, "down" to 20, "left" to 21, "right" to 22, "select" to 23, "back" to 4, "home" to 3,
       "volumeUp" to 24, "volumeDown" to 25, "mute" to 164, "power" to 26, "playPause" to 85, "play" to 126,

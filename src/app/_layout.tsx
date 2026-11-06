@@ -1,5 +1,6 @@
 import { Stack, usePathname } from 'expo-router';
 import * as Network from 'expo-network';
+import { useKeepAwake } from 'expo-keep-awake';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -23,6 +24,7 @@ import { useDeviceStore } from '../store/deviceStore';
 import { useSettingsStore } from '../store/settingsStore';
 
 export default function RootLayout() {
+  useKeepAwake('tv-remote-foreground');
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
   useEffect(() => {
@@ -51,7 +53,6 @@ export default function RootLayout() {
           )
             return;
           discovery.handle({ type: 'networkChanged', available: true });
-          void connection.resume().catch(report);
         });
     return () => {
       network?.remove();
