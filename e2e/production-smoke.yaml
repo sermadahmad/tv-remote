@@ -1,0 +1,41 @@
+appId: dev.universaltv.remote
+name: Real adapter simulator launch
+---
+- launchApp:
+    clearState: true
+- openLink: exp+universal-tv-remote://?__expo_url=http%3A%2F%2Flocalhost%3A8081&__expo_disable_onboarding=1&__expo_disable_fab=1&__expo_disable_auto_launch=1
+- tapOn:
+    text: Open
+    optional: true
+- runFlow:
+    when:
+      visible: http://
+    commands:
+      - tapOn: http://
+      - inputText: http://localhost:8081
+      - tapOn:
+          text: Connect
+          optional: true
+- tapOn:
+    text: Continue
+    optional: true
+- tapOn:
+    text: Close
+    optional: true
+- extendedWaitUntil:
+    visible: Find my TV
+    timeout: 120000
+- assertNotVisible: 'UI TEST.*'
+- takeScreenshot: production-onboarding
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- tapOn:
+    text: Allow
+    optional: true
+- assertVisible: Make yourself at home.
+- extendedWaitUntil:
+    visible: 'No TVs found yet|Connect your phone and TV.*|Allow local network access.*'
+    timeout: 30000
+- assertNotVisible: '.*Simulated.*'
+- takeScreenshot: production-discovery

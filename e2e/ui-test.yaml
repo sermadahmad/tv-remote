@@ -1,0 +1,67 @@
+appId: dev.universaltv.remote.uitest
+name: Explicit simulated TV journey
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: 'UI TEST.*SIMULATED TV.*'
+    timeout: 120000
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- tapOn: Connect to Living Room · Simulated
+- assertVisible: A small introduction.
+- tapOn: Cancel connection
+- tapOn: Connect to Living Room · Simulated
+- tapOn: TV pairing code
+- inputText: '000000'
+- scrollUntilVisible:
+    element: Pair securely
+- tapOn: Pair securely
+- assertVisible: 'Enter the six characters shown on the TV.*'
+- tapOn:
+    text: Dismiss message
+    optional: true
+- tapOn: TV pairing code
+- inputText: A1B2C3
+- scrollUntilVisible:
+    element: Pair securely
+- tapOn: Pair securely
+- extendedWaitUntil:
+    visible: Connected · Local Wi-Fi
+    timeout: 15000
+- assertVisible: 'UI TEST.*SIMULATED TV.*'
+- tapOn: Up
+- tapOn: OK
+- tapOn: Home
+- takeScreenshot: simulated-remote
+- tapOn: Use touchpad
+- assertVisible: 'Swipe to navigate.*'
+- tapOn: Use direction buttons
+- tapOn: Settings
+- tapOn: Dark
+- assertVisible: Dark · Selected
+- tapOn: Light
+- assertVisible: Light · Selected
+- takeScreenshot: simulated-settings
+- tapOn: Saved
+- tapOn: Rename Living Room · Simulated
+- tapOn: Device name
+- eraseText: 1
+- inputText: Lounge
+- assertVisible: Lounge
+- scrollUntilVisible:
+    element: Save name
+- tapOn: Save name
+- assertVisible: Lounge
+- tapOn: Connect to Lounge
+- extendedWaitUntil:
+    visible: Connected · Local Wi-Fi
+    timeout: 15000
+- tapOn: Saved
+- scrollUntilVisible:
+    element: Forget Lounge
+- tapOn: Forget Lounge
+- tapOn: Forget TV
+- assertVisible: No saved TVs yet.
+- takeScreenshot: simulated-forgotten

@@ -7,7 +7,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
   return {
     ...config,
     name: 'Universal TV Remote',
-    slug: 'universal-tv-remote',
+    slug: uiTest ? 'universal-tv-remote-ui-test' : 'universal-tv-remote',
     scheme: uiTest ? 'universaltvremote-uitest' : 'universaltvremote',
     ios: { ...config.ios, bundleIdentifier: identifier },
     android: {
@@ -35,6 +35,19 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
           ios: { deploymentTarget: '16.4' },
         },
       ],
+      ...(uiTest
+        ? ([
+            [
+              'expo-dev-client',
+              {
+                defaultLaunchURL: 'http://localhost:8081',
+                skipOnboarding: true,
+                showMenuAtLaunch: false,
+                toolsButton: false,
+              },
+            ],
+          ] satisfies NonNullable<ExpoConfig['plugins']>)
+        : []),
     ],
     extra: { ...config.extra, uiTest },
   };
