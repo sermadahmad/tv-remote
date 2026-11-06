@@ -4,5 +4,5 @@ import { useSettingsStore } from '../store/settingsStore';
 
 export default function Index() {
   const onboarded = useSettingsStore((state) => state.onboarded);
-  return <Redirect href={onboarded ? '/devices' : '/onboarding'} />;
+  return <Redirect href={onboarded ? '/remote' : '/onboarding'} />;
 }

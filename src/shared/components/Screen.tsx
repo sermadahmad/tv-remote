@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ArrowLeft, Bookmark, Radio, Settings2 } from 'lucide-react-native';
+import { ArrowLeft } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,7 +12,7 @@ export function Screen({
   subtitle,
   children,
   back = false,
-  navigation = true,
+  tabbed = false,
   compact = false,
   accessory,
 }: {
@@ -21,13 +21,18 @@ export function Screen({
   subtitle?: string;
   children: ReactNode;
   back?: boolean;
-  navigation?: boolean;
+  tabbed?: boolean;
   compact?: boolean;
   accessory?: ReactNode;
 }) {
   const { colors } = useTheme();
   return (
-    <SafeAreaView style={[styles.root, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      edges={
+        tabbed ? ['top', 'left', 'right'] : ['top', 'left', 'right', 'bottom']
+      }
+      style={[styles.root, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
@@ -86,34 +91,6 @@ export function Screen({
           {children}
         </View>
       </ScrollView>
-      {navigation && (
-        <View style={[styles.navigation, { borderTopColor: colors.line }]}>
-          {[
-            { label: 'Connect', route: '/devices', Icon: Radio },
-            { label: 'Saved', route: '/saved', Icon: Bookmark },
-            { label: 'Settings', route: '/settings', Icon: Settings2 },
-          ].map(({ label, route, Icon }) => (
-            <Pressable
-              key={label}
-              accessibilityRole="button"
-              accessibilityLabel={label}
-              onPress={() => {
-                if (route === '/devices') router.replace('/devices');
-                else if (route === '/saved') router.replace('/saved');
-                else router.replace('/settings');
-              }}
-              style={styles.navItem}
-            >
-              <Icon size={22} color={colors.muted} />
-              <Text
-                style={{ color: colors.muted, fontSize: tokens.type.caption }}
-              >
-                {label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
     </SafeAreaView>
   );
 }
@@ -189,14 +166,6 @@ const styles = StyleSheet.create({
   },
   subtitle: { fontSize: tokens.type.body, lineHeight: 24, marginTop: 12 },
   body: { marginTop: 28, gap: tokens.space.card },
-  navigation: { flexDirection: 'row', paddingVertical: 10, borderTopWidth: 1 },
-  navItem: {
-    flex: 1,
-    minHeight: tokens.target,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
   card: {
     padding: tokens.space.lg,
     borderWidth: 1,

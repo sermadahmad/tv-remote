@@ -3,17 +3,18 @@ import { router } from 'expo-router';
 import { ShieldCheck } from 'lucide-react-native';
 import { Linking, Switch, View } from 'react-native';
 
-import { report } from '../features/runtime';
-import { Button } from '../shared/components/Button';
-import { Card, Copy, Screen } from '../shared/components/Screen';
-import { useTheme } from '../shared/theme';
-import { useSettingsStore } from '../store/settingsStore';
+import { report } from '../../features/runtime';
+import { Button } from '../../shared/components/Button';
+import { Card, Copy, Screen } from '../../shared/components/Screen';
+import { useTheme } from '../../shared/theme';
+import { useSettingsStore } from '../../store/settingsStore';
 
 export default function Settings() {
   const { colors } = useTheme();
   const settings = useSettingsStore();
   return (
     <Screen
+      tabbed
       title="Just the way you like."
       subtitle="A few thoughtful adjustments."
     >
@@ -49,7 +50,7 @@ export default function Settings() {
       <Button
         label="Manage saved TVs"
         secondary
-        onPress={() => router.replace('/saved')}
+        onPress={() => router.navigate('/saved')}
       />
       <Card>
         <ShieldCheck color={colors.accent} />

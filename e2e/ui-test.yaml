@@ -9,6 +9,8 @@ name: Explicit simulated TV journey
 - scrollUntilVisible:
     element: Find my TV
 - tapOn: Find my TV
+- assertVisible: Devices
+- assertVisible: Remote
 - tapOn: Connect to Living Room · Simulated
 - assertVisible: A small introduction.
 - tapOn: Cancel connection
@@ -37,13 +39,19 @@ name: Explicit simulated TV journey
 - takeScreenshot: simulated-remote
 - tapOn: Use touchpad
 - assertVisible: 'Swipe to navigate.*'
-- tapOn: Use direction buttons
 - tapOn: Settings
 - tapOn: Dark
 - assertVisible: Dark · Selected
 - tapOn: Light
 - assertVisible: Light · Selected
 - takeScreenshot: simulated-settings
+- tapOn: Remote
+- assertVisible: 'Swipe to navigate.*'
+- assertVisible: Connected · Local Wi-Fi
+- tapOn: Use direction buttons
+- tapOn: Saved
+- back
+- assertVisible: Connected · Local Wi-Fi
 - tapOn: Saved
 - tapOn: Rename Living Room · Simulated
 - tapOn: Device name
@@ -65,3 +73,5 @@ name: Explicit simulated TV journey
 - tapOn: Forget TV
 - assertVisible: No saved TVs yet.
 - takeScreenshot: simulated-forgotten
+- tapOn: Remote
+- assertVisible: Choose a TV

@@ -35,13 +35,14 @@ export default function Devices() {
   };
   return (
     <Screen
+      tabbed
       title="Make yourself at home."
       subtitle="Choose a TV on your Wi-Fi network to get started."
     >
       {current.status === 'connected' && (
         <Button
           label="Open connected remote"
-          onPress={() => router.push('/remote')}
+          onPress={() => router.navigate('/remote')}
         />
       )}
       <View style={styles.status}>

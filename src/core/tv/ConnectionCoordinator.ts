@@ -229,10 +229,27 @@ export class ConnectionCoordinator {
       });
   }
 
-  async send(command: RemoteCommand): Promise<void> {
+  async send(
+    command: RemoteCommand,
+    expectedSessionId?: string,
+  ): Promise<void> {
+    if (
+      expectedSessionId !== undefined &&
+      (this.state.status !== 'connected' ||
+        this.state.session.sessionId !== expectedSessionId)
+    )
+      return;
     if (this.state.status !== 'connected') throw new TVError('connectionLost');
     validateCommand(command, this.state.session.capabilities);
     await this.adapter.send(this.state.session.sessionId, command);
+  }
+
+  async releaseKeys(sessionId: string): Promise<void> {
+    if (
+      this.state.status === 'connected' &&
+      this.state.session.sessionId === sessionId
+    )
+      await this.adapter.releaseKeys(sessionId);
   }
 
   async disconnect(): Promise<void> {

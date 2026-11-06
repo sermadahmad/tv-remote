@@ -11,18 +11,18 @@ import {
   SkipForward,
   VolumeX,
 } from 'lucide-react-native';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import type { RemoteCommand } from '../core/tv/types';
-import { DirectionPad } from '../features/remote/DirectionPad';
-import { RemoteButton } from '../features/remote/RemoteButton';
-import { Touchpad } from '../features/remote/Touchpad';
-import { connection, report } from '../features/runtime';
-import { Button } from '../shared/components/Button';
-import { Card, Copy, Screen } from '../shared/components/Screen';
-import { tokens, useTheme } from '../shared/theme';
-import { useDeviceStore } from '../store/deviceStore';
+import { DirectionPad } from '../../features/remote/DirectionPad';
+import { RemoteButton } from '../../features/remote/RemoteButton';
+import { Touchpad } from '../../features/remote/Touchpad';
+import { useFocusedCommands } from '../../features/remote/useFocusedCommands';
+import { connection, report } from '../../features/runtime';
+import { Button } from '../../shared/components/Button';
+import { Card, Copy, Screen } from '../../shared/components/Screen';
+import { tokens, useTheme } from '../../shared/theme';
+import { useDeviceStore } from '../../store/deviceStore';
 
 export default function Remote() {
   const { colors } = useTheme();
@@ -30,12 +30,13 @@ export default function Remote() {
   const selected = useDeviceStore((store) => store.selected);
   const volume = useDeviceStore((store) => store.volume);
   const [touchpad, setTouchpad] = useState(false);
-  const send = useCallback((command: RemoteCommand): void => {
-    void connection.send(command).catch(report);
-  }, []);
+  const send = useFocusedCommands(
+    state.status === 'connected' ? state.session.sessionId : null,
+  );
   if (state.status !== 'connected')
     return (
       <Screen
+        tabbed
         title="A moment to reconnect."
         subtitle="Controls will be ready when your TV reconnects."
       >
@@ -49,7 +50,7 @@ export default function Remote() {
           </Copy>
           <Button
             label="Choose a TV"
-            onPress={() => router.replace('/devices')}
+            onPress={() => router.navigate('/devices')}
           />
           {selected && (
             <Button
@@ -69,6 +70,7 @@ export default function Remote() {
     capabilities.keys[key] === 'supported';
   return (
     <Screen
+      tabbed
       title={selected?.name ?? 'Your TV'}
       eyebrow="YOUR REMOTE"
       subtitle="Connected · Local Wi-Fi"
@@ -194,7 +196,7 @@ export default function Remote() {
       <Button
         label="Switch TV"
         secondary
-        onPress={() => router.replace('/devices')}
+        onPress={() => router.navigate('/devices')}
       />
       <Copy muted>
         Some controls depend on the TV and the open app. Power works only while

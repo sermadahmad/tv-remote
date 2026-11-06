@@ -15,7 +15,7 @@ export default function Pairing() {
   const state = useDeviceStore((store) => store.connection);
   const selected = useDeviceStore((store) => store.selected);
   useEffect(() => {
-    if (state.status === 'connected') router.replace('/remote');
+    if (state.status === 'connected') router.dismissTo('/remote');
   }, [state.status]);
   useFocusEffect(
     useCallback(
@@ -28,7 +28,8 @@ export default function Pairing() {
   );
   const cancel = (): void => {
     void connection.disconnect().catch(report);
-    router.replace('/devices');
+    if (router.canDismiss()) router.dismiss();
+    else router.replace('/devices');
   };
   return (
     <Screen
@@ -38,7 +39,6 @@ export default function Pairing() {
           : 'Connecting to your TV.'
       }
       subtitle={selected?.name ?? 'Choose a TV from the device list.'}
-      navigation={false}
     >
       <Card>
         <ShieldCheck size={36} color={colors.accent} />
@@ -73,10 +73,7 @@ export default function Pairing() {
             )}
           </>
         ) : state.status === 'disconnected' ? (
-          <Button
-            label="Choose a TV"
-            onPress={() => router.replace('/devices')}
-          />
+          <Button label="Choose a TV" onPress={cancel} />
         ) : (
           <>
             <ActivityIndicator color={colors.accent} />

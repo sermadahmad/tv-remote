@@ -1,11 +1,15 @@
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as Network from 'expo-network';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import {
   connection,
@@ -14,14 +18,13 @@ import {
   initializeRuntime,
   report,
 } from '../features/runtime';
-import { useTheme } from '../shared/theme';
+import { tokens, useTheme } from '../shared/theme';
 import { useDeviceStore } from '../store/deviceStore';
 import { useSettingsStore } from '../store/settingsStore';
 
 export default function RootLayout() {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
-  const notice = useDeviceStore((state) => state.notice);
   useEffect(() => {
     const unsubscribe = initializeRuntime();
     if (useSettingsStore.getState().onboarded)
@@ -86,34 +89,61 @@ export default function RootLayout() {
             animation: reducedMotion ? 'none' : 'slide_from_right',
             contentStyle: { backgroundColor: theme.colors.background },
           }}
-        />
-        {notice && (
-          <View
-            style={[styles.notice, { backgroundColor: theme.colors.raised }]}
-            accessibilityLiveRegion="polite"
-          >
-            <Text style={{ color: theme.colors.text, flex: 1 }}>
-              {notice.message}
-            </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Dismiss message"
-              onPress={() => useDeviceStore.setState({ notice: null })}
-              style={styles.dismiss}
-            >
-              <Text style={{ color: theme.colors.accent }}>Dismiss</Text>
-            </Pressable>
-          </View>
-        )}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
+          <Stack.Screen
+            name="onboarding"
+            options={{ presentation: 'fullScreenModal' }}
+          />
+          <Stack.Screen
+            name="pairing"
+            options={{ presentation: 'fullScreenModal' }}
+          />
+        </Stack>
+        <AppNotice />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
+}
+
+function AppNotice() {
+  const notice = useDeviceStore((state) => state.notice);
+  const theme = useTheme();
+  const { bottom } = useSafeAreaInsets();
+  const pathname = usePathname();
+  const tabbed = ['/remote', '/devices', '/saved', '/settings'].includes(
+    pathname,
+  );
+  return notice ? (
+    <View
+      style={[
+        styles.notice,
+        {
+          backgroundColor: theme.colors.raised,
+          bottom: bottom + (tabbed ? tokens.tabBarHeight : 0) + 16,
+        },
+      ]}
+      accessibilityLiveRegion="polite"
+    >
+      <Text style={{ color: theme.colors.text, flex: 1 }}>
+        {notice.message}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Dismiss message"
+        onPress={() => useDeviceStore.setState({ notice: null })}
+        style={styles.dismiss}
+      >
+        <Text style={{ color: theme.colors.accent }}>Dismiss</Text>
+      </Pressable>
+    </View>
+  ) : null;
 }
 const styles = StyleSheet.create({
   root: { flex: 1 },
   notice: {
     position: 'absolute',
-    bottom: 100,
     left: 20,
     right: 20,
     padding: 16,

@@ -14,6 +14,7 @@ export const tokens = {
     hero: 44,
   },
   target: 52,
+  tabBarHeight: 64,
   remoteTarget: 64,
   duration: 140,
 };

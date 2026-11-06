@@ -41,6 +41,58 @@ function setup(paired = true) {
 }
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => jest.useRealTimers());
+test('releases held keys without disconnecting an active session', async () => {
+  const { coordinator, adapter } = setup();
+  await coordinator.select(television);
+  await coordinator.send(
+    { type: 'key', key: 'up', action: 'press' },
+    testSession.sessionId,
+  );
+  await coordinator.releaseKeys(testSession.sessionId);
+  expect(adapter.released).toEqual([testSession.sessionId]);
+  expect(adapter.disconnected).toEqual([]);
+  expect(coordinator.snapshot().status).toBe('connected');
+});
+test('ignores commands and releases scoped to an obsolete session', async () => {
+  const { coordinator, adapter, references } = setup();
+  await coordinator.select(television);
+  references.values.set('other', 'opaque');
+  adapter.connectImpl = async () => ({
+    ...testSession,
+    sessionId: 'new-session',
+    deviceId: 'other',
+  });
+  await coordinator.select({
+    ...television,
+    id: 'other',
+    identity: 'authenticated',
+  });
+  adapter.sent.length = 0;
+  adapter.released.length = 0;
+  await coordinator.send(
+    { type: 'key', key: 'up', action: 'release' },
+    testSession.sessionId,
+  );
+  await coordinator.releaseKeys(testSession.sessionId);
+  expect(adapter.sent).toEqual([]);
+  expect(adapter.released).toEqual([]);
+  await coordinator.send(
+    { type: 'key', key: 'up', action: 'tap' },
+    'new-session',
+  );
+  expect(adapter.sent).toHaveLength(1);
+});
+test('stale screen input after disconnect is ignored while ordinary sends still report connection loss', async () => {
+  const { coordinator } = setup();
+  await coordinator.send(
+    { type: 'key', key: 'up', action: 'tap' },
+    'old-session',
+  );
+  await coordinator.releaseKeys('old-session');
+  await expect(
+    coordinator.send({ type: 'key', key: 'up', action: 'tap' }),
+  ).rejects.toMatchObject({ code: 'connectionLost' });
+});
 test('forgetting an old TV cannot erase a newly selected TV or its recovery target', async () => {
   const { coordinator, adapter, references } = setup();
   await coordinator.select(television);

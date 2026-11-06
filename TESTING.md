@@ -26,6 +26,12 @@ macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, And
 
 ## Automated scope
 
+### Persistent navigation revision — 2026-11-06
+
+The persistent Remote/Devices/Saved/Settings tab navigator passed type checking, lint, formatting, 91 Jest tests, and both production Hermes bundle exports. Router integration tests verify preserved tab state, focus-scoped discovery, pairing cancellation to the originating tab, success into the existing Remote tab, and rejection of gestures from an earlier focus. Coordinator tests verify session-scoped key release without disconnecting and rejection of obsolete-session input.
+
+The updated Android simulated-TV Maestro journey passed, including returning to the same touchpad mode after visiting Settings, Android Back returning to Remote, rename/reconnect/forget, and the disconnected Remote state. The production smoke rerun was interrupted by the emulator disconnecting and is being repeated during deployment setup. These results do not establish physical TV compatibility.
+
 Jest uses the actual Lucide CommonJS distribution, an in-memory adapter for deterministic application tests, and component-level rendering. It covers capability gates, hexadecimal entry including A–F, private IPv4 validation, redacted errors, corrupt storage, authenticated identity association, discovery lifecycle/permission recovery, cancellation, bounded retry, foreground/background behavior, switching, forgetting, stale events, D-pad taps/holds, and pairing form behavior. Core/application coverage gates are 90% statements and 85% branches; meaningful behavioral assertions are required.
 
 Native tests use public synthetic RSA fixtures independently generated with Python/OpenSSL. They verify the pairing digest, invalid code rejection, fragmented/coalesced framing, malformed/oversized frames, and a known navigation wire message. Swift additionally tests local address restrictions. Fixture copies are checked by `node scripts/verify-fixtures.mjs`. Three hosted iOS tests validate real simulator Keychain creation, signing, persistence, deletion, and cleanup after interruption. The initial unhosted run failed with OSStatus -34018 (missing entitlement); a separate ad hoc signed app host resolves this requirement. These tests do not exercise a real TV, the system permission prompt, live TV TLS, or native network interruption.

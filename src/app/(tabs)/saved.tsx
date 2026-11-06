@@ -8,11 +8,11 @@ import {
   refreshSaved,
   report,
   repository,
-} from '../features/runtime';
-import { Button } from '../shared/components/Button';
-import { Card, Copy, Screen } from '../shared/components/Screen';
-import { useTheme } from '../shared/theme';
-import { useDeviceStore } from '../store/deviceStore';
+} from '../../features/runtime';
+import { Button } from '../../shared/components/Button';
+import { Card, Copy, Screen } from '../../shared/components/Screen';
+import { useTheme } from '../../shared/theme';
+import { useDeviceStore } from '../../store/deviceStore';
 
 export default function Saved() {
   const { colors } = useTheme();
@@ -22,6 +22,7 @@ export default function Saved() {
   const [forgetting, setForgetting] = useState<string | null>(null);
   return (
     <Screen
+      tabbed
       title="Your familiar places."
       subtitle="Your paired TVs, ready for next time."
     >
@@ -32,7 +33,7 @@ export default function Saved() {
           <Copy muted>Pair a TV and it will appear here.</Copy>
           <Button
             label="Find a TV"
-            onPress={() => router.replace('/devices')}
+            onPress={() => router.navigate('/devices')}
           />
         </Card>
       )}

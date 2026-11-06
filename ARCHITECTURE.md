@@ -1,5 +1,9 @@
 # Architecture
 
+## Persistent navigation
+
+The root Expo Router stack owns onboarding and pairing. A child `(tabs)` navigator owns Remote, Devices, Saved, and Settings, preserving each screen while switching without stack transitions. The connection coordinator remains above navigation; Devices uses focus callbacks to own discovery. Remote command callbacks carry a session identity and focus epoch, and leaving Remote releases held keys without closing the connection. Pairing success dismisses into the existing Remote tab, and cancellation dismisses back to the originating tab. The tab bar owns the bottom safe-area inset.
+
 Universal TV Remote is a local-network Android/iOS application. The sole production adapter is Android TV Remote v2. There is no account, server, analytics, advertising, or cloud control path.
 
 ## Boundaries

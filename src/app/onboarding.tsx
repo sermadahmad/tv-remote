@@ -12,13 +12,12 @@ export default function Onboarding() {
   const update = useSettingsStore((state) => state.update);
   const finish = (): void => {
     update({ onboarded: true });
-    router.replace('/devices');
+    router.dismissTo('/devices');
   };
   return (
     <Screen
       title={'Your TV.\nCloser than ever.'}
       subtitle="A little less searching for the remote. A little more time for what you love."
-      navigation={false}
     >
       <View style={[styles.illustration, { backgroundColor: colors.surface }]}>
         <Tv size={96} color={colors.accent} strokeWidth={1.25} />

@@ -30,16 +30,14 @@ export function RemoteButton({
   const haptics = useSettingsStore((state) => state.haptics);
   const held = useRef(false);
   const suppressTap = useRef(false);
-  const sendRef = useRef(send);
-  useEffect(() => {
-    sendRef.current = send;
-  }, [send]);
   useEffect(
     () => () => {
       if (held.current)
-        sendRef.current({ type: 'key', key: commandKey, action: 'release' });
+        send({ type: 'key', key: commandKey, action: 'release' });
+      held.current = false;
+      suppressTap.current = false;
     },
-    [commandKey],
+    [commandKey, send],
   );
   return (
     <Pressable
