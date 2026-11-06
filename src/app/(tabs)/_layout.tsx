@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { tokens, useTheme } from '../../shared/theme';
 
-export const unstable_settings = { initialRouteName: 'remote' };
+export const unstable_settings = { anchor: 'remote' };
 
 export default function TabLayout() {
   const { colors } = useTheme();

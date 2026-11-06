@@ -92,10 +92,7 @@ export default function RootLayout() {
         >
           <Stack.Screen name="index" />
           <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
-          <Stack.Screen
-            name="onboarding"
-            options={{ presentation: 'fullScreenModal' }}
-          />
+          <Stack.Screen name="onboarding" />
           <Stack.Screen
             name="pairing"
             options={{ presentation: 'fullScreenModal' }}
