@@ -39,7 +39,7 @@ jobs:
       - name: Generate Android project
         run: npx expo prebuild --platform android --no-install
       - name: Android native tests
-        run: ./android/gradlew -p android :tv-remote-native:testDebugUnitTest --max-workers=4 --console=plain
+        run: ./android/gradlew -p android :tv-remote-native:testDebugUnitTest :app-updates-native:assembleDebugAndroidTest --max-workers=4 --console=plain
   build_android:
     name: Signed production Android App Bundle
     needs: [checks]

@@ -1,0 +1,42 @@
+appId: com.sermadahmad.tvremote.uitest
+name: Simulated update notices at enlarged text
+---
+- launchApp:
+    clearState: true
+- openLink: 'universaltvremote-uitest://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081'
+- extendedWaitUntil:
+    visible: 'UI TEST.*SIMULATED UPDATES.*'
+    timeout: 120000
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- extendedWaitUntil:
+    visible: A new version is available
+    timeout: 15000
+- assertVisible: Update
+- assertVisible: Later
+- assertVisible: Settings
+- takeScreenshot: update-large-text-light
+- tapOn: Later
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Dark
+- tapOn: Dark
+- scrollUntilVisible:
+    element: Check for updates
+- tapOn: Check for updates
+- assertVisible: Update
+- assertVisible: Later
+- takeScreenshot: update-large-text-dark
+- tapOn: Update
+- extendedWaitUntil:
+    visible: Your update is ready
+    timeout: 15000
+- assertVisible: Restart to update
+- assertVisible: Later
+- assertVisible: Remote
+- takeScreenshot: update-ready-large-text-dark
+- tapOn: Later
+- scrollUntilVisible:
+    element: Check for updates
+- assertVisible: Check for updates

@@ -1,0 +1,76 @@
+appId: com.sermadahmad.tvremote.uitest
+name: Explicit simulated optional Android updates
+---
+- launchApp:
+    clearState: true
+- openLink: 'universaltvremote-uitest://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081'
+- extendedWaitUntil:
+    visible: 'UI TEST.*SIMULATED UPDATES.*'
+    timeout: 120000
+- assertNotVisible: A new version is available
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- extendedWaitUntil:
+    visible: A new version is available
+    timeout: 15000
+- takeScreenshot: update-available
+- tapOn: Later
+- tapOn: Settings
+- assertNotVisible: A new version is available
+- scrollUntilVisible:
+    element: Check for updates
+- tapOn: Check for updates
+- assertVisible: A new version is available
+- tapOn: Devices
+- scrollUntilVisible:
+    element: Connect to Living Room · Simulated
+- tapOn: Connect to Living Room · Simulated
+- assertVisible: Enter the code shown on your TV
+- assertNotVisible: A new version is available
+- scrollUntilVisible:
+    element: TV pairing code
+- tapOn: TV pairing code
+- inputText: A1B2C3
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: Connected · Local Wi-Fi
+    timeout: 15000
+- assertVisible: A new version is available
+- tapOn: Later
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: A new version is available
+    timeout: 15000
+- assertVisible: Connected · Local Wi-Fi
+- tapOn: Update
+- extendedWaitUntil:
+    visible: Your update is ready
+    timeout: 15000
+- assertVisible: Connected · Local Wi-Fi
+- takeScreenshot: update-ready-connected
+- tapOn: Later
+- assertNotVisible: Your update is ready
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Check for updates
+- tapOn: Check for updates
+- assertVisible: Your update is ready
+- tapOn: Restart to update
+- extendedWaitUntil:
+    visible: Your update is ready
+    timeout: 15000
+- tapOn: Later
+- scrollUntilVisible:
+    element: 'Couldn’t install the update.*'
+- assertVisible: 'Couldn’t install the update.*'
+- takeScreenshot: simulated-update-install-failure
+- tapOn: Remote
+- extendedWaitUntil:
+    visible: Connected · Local Wi-Fi
+    timeout: 15000
+- tapOn: OK
+- tapOn: Saved
+- assertVisible: Living Room · Simulated

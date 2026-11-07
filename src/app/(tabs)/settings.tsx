@@ -7,6 +7,7 @@ import { report } from '../../features/runtime';
 import { Button } from '../../shared/components/Button';
 import { Card, Copy, Screen } from '../../shared/components/Screen';
 import { useTheme } from '../../shared/theme';
+import { UpdatesSettings } from '../../features/app-updates/UpdateUI';
 import { BrandLogo } from '../../shared/branding/Brand';
 import { useSettingsStore } from '../../store/settingsStore';
 
@@ -58,9 +59,9 @@ export default function Settings() {
         <ShieldCheck color={colors.accentText} />
         <Copy>Private, by design</Copy>
         <Copy muted>
-          TV control happens on your local network. No account, analytics,
-          advertising, or cloud service is used. Your saved TV connection is
-          protected by your phone.
+          TV control happens on your local network. No app account, analytics,
+          or advertising is used. Your saved TV connection is protected by your
+          phone.
         </Copy>
       </Card>
       <Card>
@@ -82,6 +83,7 @@ export default function Settings() {
           }}
         />
       </Card>
+      <UpdatesSettings />
       <Card>
         <BrandLogo width={260} />
         <Copy>About Universal TV Remote</Copy>

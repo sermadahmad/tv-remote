@@ -66,6 +66,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
     extra: {
       ...config.extra,
       uiTest,
+      appUpdateFixture: uiTest && process.env.APP_UPDATE_FIXTURE === '1',
       eas: { projectId: buildIdentity.projectId },
     },
   };

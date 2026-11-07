@@ -1,5 +1,7 @@
 # Universal TV Remote
 
+Android update notices: [docs/APP_UPDATES.md](docs/APP_UPDATES.md).
+
 Brand artwork, dimensions and regeneration: [BRAND.md](BRAND.md).
 Beginner setup and troubleshooting behavior: [UX.md](UX.md).
 

@@ -19,6 +19,7 @@ module.exports = {
   collectCoverageFrom: [
     'src/core/tv/{validation,errors,TVRepository,ConnectionCoordinator}.ts',
     'src/features/discovery/DiscoveryService.ts',
+    'src/features/app-updates/{UpdateCoordinator,contracts,PlayUpdateAdapter}.ts',
   ],
   coverageThreshold: {
     global: { statements: 90, branches: 85, functions: 90, lines: 90 },

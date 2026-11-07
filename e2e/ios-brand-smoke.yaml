@@ -27,8 +27,11 @@ name: iOS release branding and beginner help
 - tapOn: I’ve turned on my TV
 - tapOn: 'Settings.*'
 - tapOn: Dark
+- assertNotVisible: App updates
+- assertNotVisible: A new version is available
 - takeScreenshot: ios-dark-settings
 - tapOn: Light
+- assertNotVisible: App updates
 - takeScreenshot: ios-light-settings
 - tapOn: 'Remote.*'
 - assertVisible: Choose a TV

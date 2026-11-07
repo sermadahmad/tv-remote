@@ -1,5 +1,19 @@
 # Local UI automation
 
+`app-updates.yaml` requires the Android `.uitest` build and Metro started with
+`APP_VARIANT=ui-test APP_UPDATE_FIXTURE=1`. It requires the persistent **SIMULATED
+UPDATES** label before testing. The journey covers setup/pairing deferral, Later,
+manual rechecking, a foreground visit, simulated download completion, postponed
+restart and recovery from an intentionally failed installation. No package is
+installed by this fixture. Normal UI-test runs leave `APP_UPDATE_FIXTURE` unset;
+real update checks remain disabled. See [update testing](../docs/APP_UPDATES.md).
+
+`app-updates-large-text.yaml` uses the same explicit update fixture. Run it at a
+360 × 640 logical viewport with font scale 1.3, restoring the emulator's previous
+size, density and font scale afterward. It checks availability/restart actions,
+tab access, Settings rechecking and light/dark appearance. These simulations do
+not establish real Play consent, download or package-replacement behavior.
+
 The beginner flows use **Find your TV**, **Need help?**, and **Advanced connection
 options**. Manual address entry stays inside the advanced disclosure. The full
 fixture journey also exercises inline pairing help, power-button guidance and

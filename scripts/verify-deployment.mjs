@@ -15,8 +15,10 @@ const eas = JSON.parse(
 );
 const originalVariant = process.env.APP_VARIANT;
 const originalTarget = process.env.ANDROID_TARGET_SDK;
+const originalUpdateFixture = process.env.APP_UPDATE_FIXTURE;
 try {
   process.env.ANDROID_TARGET_SDK = '36';
+  process.env.APP_UPDATE_FIXTURE = '1';
   for (const variant of ['production', 'ui-test', 'development']) {
     process.env.APP_VARIANT = variant;
     const { exp } = getConfig(process.cwd());
@@ -33,6 +35,11 @@ try {
     assert.equal(exp.android.package, applicationId);
     assert.equal(exp.ios.bundleIdentifier, applicationId);
     assert.equal(exp.extra.uiTest, testing);
+    assert.equal(
+      exp.extra.appUpdateFixture,
+      testing,
+      'Update simulation must be impossible outside the UI-test variant',
+    );
     for (const permission of [
       'android.permission.RECORD_AUDIO',
       'android.permission.ACCESS_FINE_LOCATION',
@@ -75,6 +82,9 @@ try {
     'Verified linked Expo identity, isolated test variant, signed-build profile and internal-only submission configuration.',
   );
 } finally {
+  if (originalUpdateFixture === undefined)
+    delete process.env.APP_UPDATE_FIXTURE;
+  else process.env.APP_UPDATE_FIXTURE = originalUpdateFixture;
   if (originalVariant === undefined) delete process.env.APP_VARIANT;
   else process.env.APP_VARIANT = originalVariant;
   if (originalTarget === undefined) delete process.env.ANDROID_TARGET_SDK;

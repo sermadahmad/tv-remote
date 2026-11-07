@@ -21,6 +21,8 @@ import {
 } from '../features/runtime';
 import { tokens, useTheme } from '../shared/theme';
 import { userMessage } from '../features/help/presentation';
+import { updateFixture } from '../features/app-updates/runtime';
+import { AppUpdateProvider } from '../features/app-updates/UpdateUI';
 import { useDeviceStore } from '../store/deviceStore';
 import { useSettingsStore } from '../store/settingsStore';
 
@@ -67,40 +69,43 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <StatusBar style={theme.mode === 'dark' ? 'light' : 'dark'} />
-        {fixtureBuild && (
-          <SafeAreaView
-            edges={['top']}
-            style={{ backgroundColor: theme.colors.accent }}
-          >
-            <Text
-              style={{
-                backgroundColor: theme.colors.accent,
-                color: theme.colors.onAccent,
-                textAlign: 'center',
-                padding: 8,
-                fontWeight: '700',
-              }}
+        <AppUpdateProvider>
+          {fixtureBuild && (
+            <SafeAreaView
+              edges={['top']}
+              style={{ backgroundColor: theme.colors.accent }}
             >
-              UI TEST · SIMULATED TV · CODE A1B2C3
-            </Text>
-          </SafeAreaView>
-        )}
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: reducedMotion ? 'none' : 'slide_from_right',
-            contentStyle: { backgroundColor: theme.colors.background },
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="help" />
-          <Stack.Screen
-            name="pairing"
-            options={{ presentation: 'fullScreenModal' }}
-          />
-        </Stack>
+              <Text
+                style={{
+                  backgroundColor: theme.colors.accent,
+                  color: theme.colors.onAccent,
+                  textAlign: 'center',
+                  padding: 8,
+                  fontWeight: '700',
+                }}
+              >
+                UI TEST · SIMULATED TV · CODE A1B2C3
+                {updateFixture ? ' · SIMULATED UPDATES' : ''}
+              </Text>
+            </SafeAreaView>
+          )}
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: reducedMotion ? 'none' : 'slide_from_right',
+              contentStyle: { backgroundColor: theme.colors.background },
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
+            <Stack.Screen name="onboarding" />
+            <Stack.Screen name="help" />
+            <Stack.Screen
+              name="pairing"
+              options={{ presentation: 'fullScreenModal' }}
+            />
+          </Stack>
+        </AppUpdateProvider>
         <AppNotice />
       </SafeAreaProvider>
     </GestureHandlerRootView>

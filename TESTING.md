@@ -243,6 +243,71 @@ The revised local QA APK SHA-256 is
 It uses the local debug signing key for emulator installation. No store-signed
 artifact, cloud build, submission, push or promotion was created.
 
+## Optional Android updates — 2026-11-07
+
+The Android-only module uses Google's app-update 2.1.0 flexible flow. Its
+application coordinator owns visit dismissal, duplicate prevention, setup
+deferral, held-key release and explicit installation cleanup/recovery. Existing
+TV networking, discovery, pairing and command implementations are unchanged.
+Store metadata and the No ads declaration remain local drafts; PRIVACY.md now
+distinguishes local TV control from Google's update checks.
+
+| Check                   | Actual result                                                                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JavaScript              | 166 tests in 15 suites passed; 95.68% statements / 92.36% branches; existing coverage gates passed                                                      |
+| Update feature coverage | 98.55% statements / 93.98% branches                                                                                                                     |
+| Static checks           | TypeScript, lint, formatting and diff whitespace checks passed                                                                                          |
+| Expo/configuration      | Doctor 20/20; compatible dependencies; Android-only module registration, deployment variants, production fixture exclusion and protocol fixtures passed |
+| Assets                  | Existing 53 reproducible assets and 24 PNGs passed validation                                                                                           |
+| Native update tests     | Five instrumentation tests passed on API 35 using Google's FakeAppUpdateManager                                                                         |
+| Android UI              | Both update Maestro flows passed: full connected journey and 360 × 640 logical viewport at 130% text in light/dark themes                               |
+
+The native tests verify build-code availability, flexible-only behavior, download
+completion without automatic installation, explicit completion, cancellation,
+overlap prevention, ownership failure and resource cleanup. Google's fake
+immediately resolves its Task-based consent result; two lifecycle tests control
+that result while delegating the remaining behavior to Google's fake. Initial
+assertions exposed that limitation and were corrected before the passing run.
+The emulator lacked space for the all-architecture test APK. The executed local
+QA derivative removed unused CPU architectures and was re-signed with the local
+debug key; test code and the x86_64 runtime were retained.
+
+The labelled SIMULATED UPDATES journey verified onboarding/pairing deferral,
+Later across tabs, Settings rechecking, a genuine foreground return, retained
+connection during download, separate postponed restart, recovery after an
+intentionally failed installation, retained saved TV and working remote input.
+Screenshots confirm that the notice reserves top layout space and enlarged-text
+actions/tabs remain accessible. Component tests also check accessible button
+roles and navigator state preservation. A physical screen-reader audit remains
+open. Emulator font scale, size and density were restored after testing.
+
+The final minified x86_64 Android Release APK passed, including Android lint.
+The existing TV JVM test task was up to date. APK inspection confirmed
+`com.sermadahmad.tvremote`, local version code 1 / version 0.1.0, target API 36,
+the native update module and both fixture flags false. The APK signature verified
+with the local debug key used for emulator QA; this is not a Play-signed release.
+Its permissions contain no unknown-source installation request or advertising
+identifier permission. SHA-256:
+`9473946c34af1080a794429dbcb95b0e1b53b763d6e097406561c7ba8d739376`.
+Remote EAS production version-code management is unchanged.
+
+The unsigned x86_64 iOS simulator Release build also passed using the cached
+development workspace. Apple autolinking excludes the Android update module.
+The installed simulator's embedded JavaScript SHA-256 matched the final build.
+The iOS 26.4 Maestro regression passed on the 375 × 667 iPhone SE simulator at
+its existing Large text setting: introduction, help return, dark/light settings
+and Remote. Added assertions confirmed that Android update controls/notices were
+absent. The optional Cancel/Allow actions were skipped when their dialogs were
+absent; these warnings were not failed assertions. The simulator was shut down
+after the check.
+
+Logs and captures are retained under `artifacts/qa/app-updates/`. These tests use
+no actual Play consent, package replacement or physical TV. Real update testing
+requires an eligible Play-installed release containing this client followed by a
+higher Play-distributed version code, with retained credentials checked after
+installation. No push, cloud build, submission, Play Console edit or cloud
+monitoring was performed for this feature.
+
 ## Remaining release gates
 
 The initial displayed-code trust policy is proposed and requires hardware and security review. The control endpoint must present the same pinned public key learned during pairing; a mismatch fails closed. Keystore/Keychain credential lifecycle, backup exclusions, and interrupted native operations require on-device validation. Transport success is not TV-side execution confirmation. There is no certified compatibility list yet.

@@ -33,5 +33,17 @@ for (const platform of ['apple', 'android']) {
   ) {
     throw new Error('The iOS TV remote podspec was not resolved.');
   }
-  process.stdout.write(`TV remote native registration verified: ${platform}\n`);
+  const updates = result.modules.find(
+    (entry) => entry.packageName === 'app-updates-native',
+  );
+  if (
+    platform === 'android' &&
+    (!updates || !JSON.stringify(updates).includes('AppUpdatesNativeModule'))
+  )
+    throw new Error('The Android app update module is not registered.');
+  if (platform === 'apple' && updates)
+    throw new Error('The app update module must remain Android-only.');
+  process.stdout.write(
+    `TV remote and app update native registration verified: ${platform}\n`,
+  );
 }

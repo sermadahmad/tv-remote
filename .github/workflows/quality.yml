@@ -50,7 +50,7 @@ jobs:
           cache: gradle
       - run: npm ci
       - run: npx expo prebuild --platform android --no-install
-      - run: ./gradlew :tv-remote-native:testDebugUnitTest :app:assembleDebug --console=plain
+      - run: ./gradlew :tv-remote-native:testDebugUnitTest :app-updates-native:assembleDebugAndroidTest :app:assembleDebug --console=plain
         working-directory: android
   ios:
     runs-on: macos-latest
