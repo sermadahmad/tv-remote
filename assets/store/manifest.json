@@ -1,0 +1,60 @@
+{
+  "applicationId": "com.sermadahmad.tvremote",
+  "targetVersion": "1.0.0",
+  "font": {
+    "path": "../brand/fonts/Inter-SemiBold.ttf",
+    "license": "../brand/fonts/OFL.txt",
+    "sha256": "78a843fade9d4612a5567302fb595b56976eb5fcebf4fea5a5912d638bafcde3"
+  },
+  "exports": [
+    {
+      "path": "play-icon.png",
+      "width": 512,
+      "height": 512,
+      "colorType": 6,
+      "sha256": "6ce78e5291b424ac6a40035b860349b1e1991867ff908100ec6f2751c7001c3d",
+      "alt": "Universal TV Remote symbol: a remote in front of a television with wireless arcs."
+    },
+    {
+      "path": "feature-graphic.png",
+      "width": 1024,
+      "height": 500,
+      "colorType": 2,
+      "sha256": "197a087bbdb31b617340e760944e1fcba14eabe63e2b82ec654a899132588e46",
+      "alt": "Universal TV Remote wordmark beside a teal and mint directional control on midnight navy."
+    }
+  ],
+  "screenshotStatus": "pending-genuine-release-captures",
+  "captures": [
+    {
+      "id": "01-introduction",
+      "file": "01-introduction.png",
+      "alt": "Introduction explaining how to connect a compatible TV over home Wi-Fi."
+    },
+    {
+      "id": "02-discovery",
+      "file": "02-discovery.png",
+      "alt": "Devices screen listing a compatible TV discovered on the local Wi-Fi network."
+    },
+    {
+      "id": "03-remote",
+      "file": "03-remote.png",
+      "alt": "Connected remote with direction buttons, Home, Back and supported volume controls."
+    },
+    {
+      "id": "04-touchpad",
+      "file": "04-touchpad.png",
+      "alt": "Connected remote in directional touchpad mode."
+    },
+    {
+      "id": "05-saved",
+      "file": "05-saved.png",
+      "alt": "Saved TVs screen with a paired television and its connection and management actions."
+    },
+    {
+      "id": "06-settings",
+      "file": "06-settings.png",
+      "alt": "Settings screen with appearance and haptic feedback preferences."
+    }
+  ]
+}

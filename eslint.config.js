@@ -4,7 +4,14 @@ const expo = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expo,
   {
-    ignores: ['android/**', 'ios/**', 'coverage/**', 'dist/**', '**/.build/**'],
+    ignores: [
+      'android/**',
+      'ios/**',
+      'coverage/**',
+      'dist/**',
+      'sites/**',
+      '**/.build/**',
+    ],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],

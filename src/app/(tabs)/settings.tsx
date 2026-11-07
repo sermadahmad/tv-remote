@@ -8,6 +8,7 @@ import { Button } from '../../shared/components/Button';
 import { Card, Copy, Screen } from '../../shared/components/Screen';
 import { useTheme } from '../../shared/theme';
 import { UpdatesSettings } from '../../features/app-updates/UpdateUI';
+import { PublicLinks } from '../../features/settings/PublicLinks';
 import { BrandLogo } from '../../shared/branding/Brand';
 import { useSettingsStore } from '../../store/settingsStore';
 
@@ -64,6 +65,7 @@ export default function Settings() {
           phone.
         </Copy>
       </Card>
+      <PublicLinks />
       <Card>
         <Copy>Troubleshooting</Copy>
         <Copy muted>
@@ -88,7 +90,7 @@ export default function Settings() {
         <BrandLogo width={260} />
         <Copy>About Universal TV Remote</Copy>
         <Copy muted>
-          Version {Application.nativeApplicationVersion ?? '0.1.0'}
+          Version {Application.nativeApplicationVersion ?? '1.0.0'}
         </Copy>
         <Copy muted>
           TV text input is unavailable. Control support depends on your TV’s

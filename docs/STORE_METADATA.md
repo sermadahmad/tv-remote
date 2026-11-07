@@ -1,34 +1,100 @@
-# Store preparation — unpublished draft
+# Google Play listing — Universal TV Remote 1.0.0
 
-Confirmed app: **Universal TV Remote**, free, English-first, Android package `com.sermadahmad.tvremote`, public support contact `fixemj@gmail.com`. Expo owner/project: `sermadahmad/tv-remote`. The Android upload key is managed in Expo Credentials. Play Console app creation and the first internal release are tracked in DEPLOYMENT.md. Final publisher verification, privacy-policy URL, release icons, and store screenshots remain outstanding. No public release has been published.
+This is the approved release-preparation copy for `com.sermadahmad.tvremote`.
+Uploading these files is separate from Play review, closed-test eligibility and
+public availability. Record actual Console/release results in DEPLOYMENT.md.
 
-## Proposed listing fields
+## Listing fields
 
-- **Title:** Universal TV Remote (19 characters).
-- **Short description:** Wi-Fi remote for compatible Android TV and Google TV devices. (61 characters).
-- **Pricing:** retain the existing Free setting.
-- **Ads declaration draft:** No; the app currently contains no advertising. Verify against the signed release and bundled SDKs before submitting the declaration.
+| Field                | Value                                                              |
+| -------------------- | ------------------------------------------------------------------ |
+| App name             | Universal TV Remote                                                |
+| Short description    | Wi-Fi remote for compatible Android TV and Google TV devices.      |
+| Default language     | English (United States), en-US                                     |
+| Application category | Tools                                                              |
+| Pricing              | Free                                                               |
+| Contact email        | fixemj@gmail.com                                                   |
+| Intended audience    | Ages 13–15, 16–17, and 18+; not child-directed                     |
+| Distribution         | All countries permitted by Play and the verified publisher account |
+| Trader declaration   | Apply the account's existing trader status                         |
 
-Keep “Free” and “No Ads” out of the title/developer name, and pricing promotions
-out of the short description. “Latest 2027” is not a relevant edition of this app
-and should not be used as a marketing keyword. Years are not universally banned;
-claims must be relevant and accurate. See [Google's listing guidance](https://support.google.com/googleplay/android-developer/answer/13393723?hl=en)
-and [Metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842?hl=en).
+The app name is 19 characters and the short description is 61 characters. Keep
+pricing, “Free”, “No Ads”, rankings and year keywords out of the title and short
+description. No advertising is a factual statement in the full description,
+separate from the app's Free price and its **No ads** policy declaration.
 
-These are local drafts. This change does not edit Play Console or publish a release.
+## Full description
 
-## Proposed full description
+Use your Android phone as a Wi-Fi remote for a compatible Android TV or Google TV.
+Keep your phone and TV on the same home Wi-Fi network, find your TV, and enter the
+six-character pairing code shown on its screen.
 
-Control a compatible Android TV or Google TV over your local Wi-Fi network. Find your TV, enter the pairing code shown on its screen, and use familiar navigation buttons or a directional touchpad. Save and rename your TVs, choose a light or dark appearance, and adjust haptic feedback.
+FAMILIAR TV CONTROLS
 
-No advertising. No app account required. TV commands stay on your local network. Available volume, media, and power controls depend on the TV's advertised support and firmware. Standby wake behavior varies. Keyboard input is not available in this development version.
+Navigate with direction buttons and OK, return with Home and Back, and use volume
+and mute controls when supported by your TV. Switch to a directional touchpad to
+navigate with swipes.
 
-## Release review
+YOUR SAVED CONNECTIONS
 
-This draft is not approved store copy. Limited Android hardware results and remaining compatibility checks are recorded in TESTING.md. Replace broad compatibility statements with the model, firmware, Remote Service version, and phone OS actually tested. Record validation in TESTING.md before making functional claims in listings. Optional Android application updates use Google Play and internet access; TV control remains local. Review the Play update SDK disclosure when finalizing the Data safety form.
+Save and rename your paired TVs so you can choose them again. Choose a light or
+dark appearance and turn haptic feedback on or off.
 
-The current app uses Android API 24+ and iOS 16.4+, Android compile API 37 and target API 36. The optional target-37 local-network permission path requires a device test. Review current store target-SDK requirements at submission time.
+No advertising. No app account required. TV commands stay on your local network.
+Optional app update checks and downloads use Google Play and require internet
+access.
 
-Review [PRIVACY.md](../PRIVACY.md) against signed release binaries. Complete Google Play Data safety and App Store privacy forms based on actual data handling and bundled dependencies. Supply a support URL and monitored privacy contact. Do not submit the separately identified simulated-TV build.
+COMPATIBILITY AND SETUP
 
-Release acceptance still requires hardware trust-continuity/pairing/control tests on both phone platforms, complete UI/accessibility and minimum-OS coverage, dependency-advisory remediation, publisher-approved branding, and store assets. The complete EAS workflow, signed version-code-4 AAB inspection and automatic internal submission passed; the intended account's tester invitation is verified. The GitHub repository is connected; future pushes will include the local workflow. Results and the working test link are recorded in DEPLOYMENT.md. No code has been pushed.
+Requires a compatible Android TV or Google TV with the Android TV Remote Service
+available. Your TV must be set up, powered on and reachable from the phone's local
+Wi-Fi network. This app is not an infrared remote and does not support every smart
+TV platform.
+
+Available volume, media and power controls depend on your TV, firmware and active
+TV app. Standby and wake behavior varies; waking a TV is not guaranteed. TV keyboard
+input is currently unavailable.
+
+Universal TV Remote is an independent app and is not affiliated with Google or TV
+manufacturers.
+
+## Graphics and screenshots
+
+Editable sources, exact PNG exports, alt text and capture provenance live in
+`assets/store/`. See its README for commands and the six required capture names.
+
+- Play icon: `assets/store/play-icon.png`, 512 × 512, 32-bit RGBA PNG, opaque navy
+  pixels and no baked-in rounded corners.
+- Feature graphic: `assets/store/feature-graphic.png`, 1024 × 500, 24-bit RGB PNG.
+- Six phone screenshot compositions: 1080 × 1920, 24-bit RGB PNG, generated only
+  from genuine release captures reviewed for secrets and test overlays.
+- Alt text: each export's `alt` field in `assets/store/manifest.json`.
+
+The screenshot gate stays open until genuine captures are imported. Never upload
+fixture UI, pretend screenshots, build-review sheets or app-icon mask previews as
+production screenshots. Both themes must be represented by the actual captures.
+
+## Review notes
+
+The main app has no app-account sign-in. Remote commands require a compatible TV
+on the same local network and its displayed pairing code. Provide these hardware
+and pairing instructions in App access; do not invent a reviewer account or a
+permanent test code. Reviewer instructions and Data safety declarations must match
+the actual signed release and SDK inventory, including Play In-App Updates.
+
+Complete the content-rating questionnaire from the app's actual contents; the
+rating assigned by Google is independent of the selected 13+ intended audience.
+Publish and verify the privacy and support URLs before entering them in Console,
+and include the policy link inside the release app. Do not submit `.dev` or
+`.uitest` variants.
+
+The current supported Android baseline is minimum API 24, target API 36 and
+compile API 37. Preserve signing identities and increment remote version codes.
+Real phone/TV results, remaining compatibility limits and release acceptance are
+maintained in TESTING.md. Initial public availability remains gated on the actual
+closed-test results, production access and Google's review.
+
+References: [Google listing guidance](https://support.google.com/googleplay/android-developer/answer/13393723?hl=en),
+[Metadata policy](https://support.google.com/googleplay/android-developer/answer/9898842?hl=en),
+[Preview asset specifications](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en),
+[App review preparation](https://support.google.com/googleplay/android-developer/answer/9859455?hl=en).

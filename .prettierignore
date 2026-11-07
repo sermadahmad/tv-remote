@@ -17,3 +17,5 @@ modules/tv-remote-native/android/build
 assets/brand/**/*.svg
 assets/brand/manifest.json
 src/shared/branding/artwork.ts
+sites
+assets/store/**/*.svg

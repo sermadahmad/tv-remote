@@ -308,6 +308,27 @@ higher Play-distributed version code, with retained credentials checked after
 installation. No push, cloud build, submission, Play Console edit or cloud
 monitoring was performed for this feature.
 
+## Google Play 1.0.0 preparation — 2026-11-07
+
+Added shared public privacy/support links to Settings, with accessible labels,
+non-TV browser-launch error feedback, and tests for success and retry behavior.
+The first public-facing version is 1.0.0. No TV protocol or transport code changed.
+
+The Android arm64-v8a/x86_64 production-configured Release and unsigned x86_64
+iOS simulator Release both passed. Types, lint, formatting, all 168 JavaScript
+tests and existing coverage gates passed. Expo Doctor passed 20/20; dependency,
+native-linking, fixture and deployment guards passed. Existing brand assets and
+the two new static Play graphics passed deterministic export and PNG checks.
+Six genuine release screenshots remain a separate gate; no placeholders were
+created. Evidence is under `artifacts/qa/play-listing/`.
+
+Public privacy/support/testing pages were published through a separate Sites
+repository. Anonymous curl requests returned HTTP 200 for all three pages.
+The mobile repository was not pushed. The release's SDK declaration evidence,
+including an unresolved Google Play metadata field classification, is recorded
+in `docs/PLAY_DECLARATIONS.md`. This section does not claim a closed or public
+Play release has been approved. Account/release progress is recorded separately.
+
 ## Remaining release gates
 
 The initial displayed-code trust policy is proposed and requires hardware and security review. The control endpoint must present the same pinned public key learned during pairing; a mismatch fails closed. Keystore/Keychain credential lifecycle, backup exclusions, and interrupted native operations require on-device validation. Transport success is not TV-side execution confirmation. There is no certified compatibility list yet.

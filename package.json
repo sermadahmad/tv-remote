@@ -1,6 +1,6 @@
 {
   "name": "universal-tv-remote",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
     "expo": "58.0.23",
@@ -61,7 +61,9 @@
     "doctor": "expo-doctor",
     "native:generate": "node scripts/generate-protocol.mjs",
     "assets:generate": "node scripts/generate-brand-assets.mjs",
-    "assets:check": "node scripts/generate-brand-assets.mjs --check && node scripts/verify-brand-assets.mjs"
+    "assets:check": "node scripts/generate-brand-assets.mjs --check && node scripts/verify-brand-assets.mjs",
+    "store:generate": "node scripts/generate-play-assets.mjs",
+    "store:check": "node scripts/generate-play-assets.mjs --check && node scripts/verify-play-assets.mjs"
   },
   "private": true,
   "engines": {

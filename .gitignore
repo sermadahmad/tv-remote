@@ -45,6 +45,7 @@ example
 # Test and native build artifacts
 coverage/
 artifacts/
+sites/
 **/.build/
 **/build/
 **/.swiftpm/
