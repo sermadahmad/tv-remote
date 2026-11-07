@@ -131,9 +131,10 @@ Record the actual TV manufacturer/model, firmware, Android TV Remote Service ver
 
 ## Branding and beginner setup validation
 
-The Screen + D-pad identity is implemented in `assets/brand/`; see `BRAND.md`
-for dimensions, color roles, font provenance, and offline regeneration. The
-beginner setup and troubleshooting contract is documented in `UX.md`.
+The initial Screen + D-pad branding and beginner setup were validated below.
+Later artwork revisions are recorded separately after this section. See
+`BRAND.md` for the current geometry, dimensions, colors, font provenance and
+regeneration instructions; `UX.md` documents the setup and help behavior.
 
 | Check                                   | Actual result                                                                                                                                                                                                                                                |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -188,6 +189,59 @@ System UI dialogs and driver startup timeouts. Those attempts do not count as
 passing UI results. VoiceOver/TalkBack on physical devices, minimum-OS hardware,
 and a complete accessibility audit remain pending; enlarged-text automation is
 not a substitute for them. No new real-TV compatibility claim is made.
+
+## Remote + TV artwork revision — 2026-11-07
+
+The supplied reference informed a redrawn physical remote in front of a TV and
+wireless arcs, using the existing navy, teal, mint and off-white palette. The
+remote controls use real transparent cutouts, including in the all-white Android
+monochrome layer. The same mark now supplies the launcher, splash, favicon and
+all logo variants. Font licensing, application identities and Expo asset paths
+are unchanged.
+
+All four scenes were reviewed and refined on the existing 320 × 240 grid.
+Discovery shows wireless signals between devices. Pairing shows six code cells
+and phone entry/keypad. No-TV uses a dashed, unconfirmed TV and a question/search
+lens; connection loss uses a broken link and a crossed-out wireless signal.
+The review sheet labels scenes and shows both themes, masks and small sizes.
+No networking, pairing, navigation or remote-control implementation changed.
+
+Verification for this revision is recorded separately from the earlier captures
+under `artifacts/qa/brand-revision/`. The editable masters remain in
+`scripts/brand-artwork.mjs`. Regenerate and validate with `assets:generate` and
+`assets:check`; the latter additionally checks monochrome pixel purity in the
+renderer’s premultiplied RGBA output.
+
+| Revision check   | Actual result                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Asset validation | 53 reproducible outputs; 24 PNGs; dimensions, alpha, clipping, safe circle, monochrome and contrast checks passed |
+| JavaScript       | 110 tests passed; coverage 93.70% statements / 91.03% branches; types, lint and formatting passed                 |
+| Expo             | Doctor 20/20; dependency compatibility up to date; three build variants validated                                 |
+| Android native   | Final x86_64 Release APK passed, real adapter verified, final SVG data present in its embedded Hermes bundle      |
+| iOS native       | Unsigned x86_64 simulator Release passed; final SVG data present in its embedded Hermes bundle                    |
+
+The Android artwork-review journey passed on the API 35 emulator: introduction
+logo, searching and empty discovery, connection-loss guidance, dark/light
+artwork and the dark logo lockup. Native launcher and cold-start splash captures
+were inspected for padding, clarity and clipping. The Android emulator was
+stopped after the checks. Screenshots and the focused review flow are retained
+in `artifacts/qa/brand-revision/`.
+
+The existing iOS brand/help Maestro smoke also passed on the 375 × 667 iOS 26.4
+simulator with the revised Release app, covering onboarding, power-button help,
+return to Devices, both themes and Remote. No physical TV commands were sent by
+these artwork checks. The revised iOS launcher and native splash were also
+visually confirmed. An initial recording caught a black launch transition after
+an in-place reinstall; a fresh QA installation and complete cold-launch capture
+showed the expected centered symbol on navy. No startup delay or application
+behavior was added to obtain the capture. Both platform captures are retained as
+`android-launcher-verified.png`, `android-splash-verified.png`,
+`ios-launcher-verified.png` and `ios-splash-verified.png` in the revision folder.
+
+The revised local QA APK SHA-256 is
+`ec15573a3d19c64dcc7188472fb88e7a973f30fc4f59c870586f9db64fd3ad9b`.
+It uses the local debug signing key for emulator installation. No store-signed
+artifact, cloud build, submission, push or promotion was created.
 
 ## Remaining release gates
 

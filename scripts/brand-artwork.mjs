@@ -29,34 +29,83 @@ export const appearances = {
   },
 };
 export function symbol(p = appearances.dark) {
-  return `<g fill="none" stroke="${p.accent}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="30" y="39" width="196" height="140" rx="26"/>
-  <path d="M128 180v25m-34 0h68"/>
+  // The remote's controls are real transparent cutouts, including in monochrome.
+  // Even-odd paths avoid masks and keep the same geometry in native SVG and PNG.
+  return `<g fill="none" stroke="${p.accent}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M140 70H47a22 22 0 0 0-22 22v72a22 22 0 0 0 22 22h41m143-57v35a22 22 0 0 1-22 22h-49m8 20h20"/>
+  <path d="M151 30c47 0 83 36 83 81m-81-61c35 0 61 26 61 61m-59-41c23 0 39 18 39 41" stroke-width="9"/>
 </g>
-<g fill="${p.accent}">
-  <rect x="120" y="65" width="16" height="25" rx="5"/>
-  <rect x="120" y="128" width="16" height="25" rx="5"/>
-  <rect x="84" y="101" width="25" height="16" rx="5"/>
-  <rect x="147" y="101" width="25" height="16" rx="5"/>
+<path fill="${p.ink}" fill-rule="evenodd" d="M110 87h28a26 26 0 0 1 26 26v91a26 26 0 0 1-26 26h-28a26 26 0 0 1-26-26v-91a26 26 0 0 1 26-26Z
+M98 166a26 26 0 1 0 52 0 26 26 0 1 0-52 0Z
+M118 207a6 6 0 1 0 12 0 6 6 0 1 0-12 0Z
+M124 108a3 3 0 0 1 3 3v11a3 3 0 0 1-6 0v-11a3 3 0 0 1 3-3Z
+M116 117a12 12 0 1 0 16 0l-4 4a6.5 6.5 0 1 1-8 0Z"/>
+<g fill="${p.ink}" stroke-linejoin="round">
+  <path d="m124 145-5 6h10Zm0 42-5-6h10Zm-21-21 6-5v10Zm42 0-6-5v10Z"/>
 </g>
-<circle cx="128" cy="109" r="10" fill="${p.mint}"/>`;
+<circle cx="124" cy="166" r="10" fill="${p.mint}"/>`;
 }
 export function svg(width, height, body) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n${body}\n</svg>\n`;
 }
+function phone(p) {
+  return `<g fill="none" stroke="${p.ink}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="24" y="84" width="64" height="128" rx="14" fill="${p.panel}"/>
+  <path d="M47 96h18m-13 104h8"/>
+</g>`;
+}
+function television(p, ghost = false) {
+  return `<g fill="none" stroke="${ghost ? p.muted : p.ink}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"${ghost ? ' stroke-dasharray="7 9"' : ''}>
+  <rect x="134" y="42" width="162" height="106" rx="15" fill="${ghost ? 'none' : p.panel}"/>
+  <path d="M215 149v25m-20 0h40"/>
+</g>`;
+}
+function phoneRemote(p, muted = false) {
+  const ink = muted ? p.muted : p.accent;
+  return `<g fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round">
+  <rect x="38" y="117" width="36" height="25" rx="5"/>
+  <path d="M56 154v5m0 18v5m-14-14h5m18 0h5"/>
+</g><circle cx="56" cy="168" r="4" fill="${ink}"/>`;
+}
+function wireless(p) {
+  return `<path d="M178 86q37-30 74 0m-62 15q25-20 50 0m-37 13q12-10 24 0"/><circle cx="215" cy="124" r="3" fill="${p.accent}" stroke="none"/>`;
+}
 export function illustration(kind, p) {
-  const tv = `<rect x="100" y="42" width="184" height="124" rx="16" fill="${p.panel}"/><path d="M174 187h36m-18-21v21"/>`;
-  const phone = `<rect x="28" y="104" width="64" height="108" rx="12" fill="${p.panel}"/><path d="M51 116h18m-13 84h8"/>`;
-  const frame = `<g fill="none" stroke="${p.ink}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${tv}${phone}</g>`;
+  const frame = `${television(p, kind === 'no-tv')}${phone(p)}`;
   const details = {
-    discovering: `<path d="M123 91q69-55 138 0m-116 21q47-36 94 0m-69 21q22-17 44 0"/><circle cx="192" cy="144" r="3" fill="${p.accent}"/><path d="M53 157q7-7 14 0m-20-10q13-13 26 0"/><circle cx="60" cy="168" r="3" fill="${p.accent}"/><path d="M105 190h30m-10-10 10 10-10 10"/>`,
-    pairing: `<rect x="127" y="84" width="130" height="42" rx="10"/><path d="M145 100v10m19-10v10m19-10v10m19-10v10m19-10v10m19-10v10"/><rect x="43" y="140" width="34" height="20" rx="4"/><path d="m48 178 8 8 16-17m33 1 25-25"/>`,
-    'no-tv': `<circle cx="192" cy="102" r="27"/><path d="m211 123 17 17m-46-42h20M49 154h22m-22 12h14"/><path d="M111 202h51" stroke-dasharray="3 9"/>`,
-    'connection-lost': `<path d="M138 102h30m48 0h30m-78-11v22m48-22v22m-37-31-8 20 22 8-8 20M49 149l22 22m0-22-22 22"/><path d="m112 193 14-14m15-14 14-14" stroke-dasharray="3 9"/>`,
+    discovering: `${phoneRemote(p)}
+      <g fill="none" stroke="${p.accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        ${wireless(p)}
+        <path d="M95 121q8 9 0 18m9-28q17 19 0 38m9-48q26 29 0 58"/>
+      </g>`,
+    pairing: `<g fill="none" stroke="${p.accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        ${Array.from({ length: 6 }, (_, i) => `<rect x="${151 + i * 22}" y="82" width="12" height="20" rx="3"/>`).join('')}
+        <rect x="34" y="121" width="44" height="25" rx="5"/>
+        <path d="m153 163-43 24m3-12-3 12 12 3"/>
+      </g>
+      <g fill="${p.muted}">${[158, 174].map((y) => [43, 56, 69].map((x) => `<circle cx="${x}" cy="${y}" r="3"/>`).join('')).join('')}</g>
+      <g fill="${p.accent}">${Array.from({ length: 6 }, (_, i) => `<circle cx="${39 + i * 7}" cy="133" r="1.6"/>`).join('')}<circle cx="69" cy="174" r="4"/></g>`,
+    'no-tv': `${phoneRemote(p)}
+      <path d="M96 157h30" fill="none" stroke="${p.muted}" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"/>
+      <g transform="translate(-16 4)" stroke="${p.accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="170" cy="143" r="30" fill="${p.panel}"/>
+        <path d="m192 165 23 23" fill="none"/>
+        <path d="M162 135a8 8 0 0 1 16 0c0 6-8 6-8 12" fill="none"/>
+        <circle cx="170" cy="155" r="2.5" fill="${p.accent}" stroke="none"/>
+      </g>`,
+    'connection-lost': `${phoneRemote(p, true)}
+      <g fill="none" stroke="${p.muted}" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 8">
+        <path d="M89 157h20m34-9 18-18"/>
+      </g>
+      <g fill="none" stroke="${p.accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        ${wireless(p)}
+        <path d="m187 73 57 58" stroke="${p.panel}" stroke-width="11"/>
+        <path d="m187 73 57 58"/>
+        <circle cx="126" cy="157" r="19" fill="${p.panel}"/>
+        <path d="m119 150 14 14m0-14-14 14"/>
+      </g>`,
   };
-  return svg(
-    320,
-    240,
-    `${frame}\n<g fill="none" stroke="${p.accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${details[kind]}</g>`,
-  );
+  if (!Object.hasOwn(details, kind))
+    throw new Error(`Unknown illustration: ${kind}`);
+  return svg(320, 240, `${frame}\n${details[kind]}`);
 }

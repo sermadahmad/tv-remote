@@ -97,6 +97,16 @@ function artwork(
     if (alpha < 255) transparent++;
     if (!alpha) continue;
     visible++;
+    if (
+      path === 'icons/android-monochrome' &&
+      // resvg exposes premultiplied RGBA; white edges have RGB equal to alpha.
+      (pixels[i] !== alpha ||
+        pixels[i + 1] !== alpha ||
+        pixels[i + 2] !== alpha)
+    )
+      throw new Error(
+        `${path}: monochrome pixels must be white with transparent cutouts`,
+      );
     colors.add(pixels.subarray(i, i + 4).toString('hex'));
     if (safe && alpha > 2) {
       const x = ((i / 4) % rendered.width) + 0.5 - rendered.width / 2;
@@ -145,7 +155,7 @@ artwork(
   svg(
     1024,
     1024,
-    `<path fill="${brand.navy}" d="M0 0h1024v1024H0z"/><g transform="translate(44.8 64) scale(3.65)">${symbol()}</g>`,
+    `<path fill="${brand.navy}" d="M0 0h1024v1024H0z"/><g transform="translate(44.8 44.8) scale(3.65)">${symbol()}</g>`,
   ),
   1024,
   { opaque: true },
@@ -231,14 +241,22 @@ for (const [column, mode] of ['dark', 'light'].entries()) {
       size,
       size,
     );
-  for (const [i, kind] of Object.keys(registry.illustrations).entries())
+  for (const [i, kind] of Object.keys(registry.illustrations).entries()) {
+    const labels = {
+      discovering: 'Discovering TVs',
+      pairing: 'Entering the TV code',
+      'no-tv': 'No TV found',
+      'connection-lost': 'Connection lost',
+    };
+    board += `<text x="${x + 48 + (i % 2) * 380}" y="${580 + Math.floor(i / 2) * 270}" fill="${appearances[mode].ink}" font-family="Inter" font-size="22">${labels[kind]}</text>`;
     board += nested(
       registry.illustrations[kind][mode],
       x + 30 + (i % 2) * 380,
-      560 + Math.floor(i / 2) * 270,
-      360,
-      270,
+      585 + Math.floor(i / 2) * 270,
+      320,
+      240,
     );
+  }
   board += `<text x="${x + 40}" y="1180" fill="${appearances[mode].ink}" font-family="Inter" font-size="30">${mode === 'dark' ? 'Midnight navy' : 'Light background'}</text><rect x="${x + 40}" y="1220" width="300" height="64" rx="16" fill="${brand.teal}"/><text x="${x + 90}" y="1262" fill="${brand.navy}" font-family="Inter" font-size="24" font-weight="600">Find my TV</text>`;
 }
 artwork('review/brand-review', svg(1600, 1380, board), 1600, { opaque: true });

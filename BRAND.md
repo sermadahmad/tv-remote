@@ -1,8 +1,10 @@
 # Universal TV Remote brand system
 
-The original Screen + D-pad mark combines a rounded television, four separated
-direction buttons and a mint center button. No manufacturer trademarks or
-external image generator were used. Use the wordmark **Universal TV Remote**.
+The Remote + TV + Wi-Fi mark combines a physical remote, a television outline
+and three wireless arcs. A mint center button anchors the directional pad.
+The supplied reference informed the composition; the artwork is redrawn as
+editable geometry in the app’s navy, teal and mint palette. No manufacturer
+logos or external image generator were used. Use the wordmark **Universal TV Remote**.
 
 ## Files and regeneration
 
@@ -13,6 +15,11 @@ white monochrome variants. `.source.svg` wordmarks retain editable text; exporte
 wordmarks have paths and need no installed font. `illustrations/` contains four
 320 × 240 SVG scenes in both themes and 640 × 480 PNG exports. Their strokes are
 4 units, with rounded ends and joins; instructions remain accessible app text.
+Discovery shows signal waves between the phone and TV. Pairing shows six TV
+code cells, matching phone entry and a keypad. No-TV uses a dashed, unconfirmed
+TV silhouette and a search/question lens. Connection loss uses a crossed-out
+wireless signal and a broken link between the phone and TV. Scenes contain no
+instructional text; the review board labels each scene separately.
 
 ```sh
 npm ci
