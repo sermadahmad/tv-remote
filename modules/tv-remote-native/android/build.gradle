@@ -12,6 +12,7 @@ android {
   defaultConfig {
     minSdkVersion 24
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    consumerProguardFiles 'consumer-rules.pro'
   }
   sourceSets { main { proto { srcDir '../proto' } } }
   testOptions { unitTests.returnDefaultValues = true }

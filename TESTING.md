@@ -336,3 +336,26 @@ The initial displayed-code trust policy is proposed and requires hardware and se
 Debug builds and JavaScript exports do not replace signed release inspection. Android signing, permanent distribution identities, signed-AAB inspection, full EAS pipeline and internal tester invitation are verified. Production phone installation, store listing screenshots, metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
 
 The dependency audit reports 31 advisories (30 moderate, 1 low), with no high/critical advisories. These include tooling advisories for glob/minimatch and a deepmerge advisory without a published fix. Do not force Expo/Jest downgrades to silence the audit. Dependency remediation remains a release gate; rerun compatibility/native checks after dependency changes.
+
+# Release Protobuf retention regression — November 7, 2026
+
+The Play-installed version-code-9 release discovered the available Dawlance TV
+but failed before displaying a pairing code. The earlier minified APK's mapping
+and DEX inspection showed that R8 renamed the Java Lite message classes and
+removed fields referenced by their runtime schemas. This is a release packaging
+defect; discovery success did not establish successful pairing.
+
+The native library now ships Protobuf's documented Java Lite consumer keep rule.
+An Expo config plugin adds `verifyReleaseProtobuf` as a dependency of release
+APK/AAB builds, after R8. `npm run android:release:check` checks the generated
+schema against R8's mapping and retained-member reports. It rejects the original
+obfuscated mapping and passes the corrected 10-field pairing / 19-field control
+schemas. Direct inspection of the corrected APK also confirms retained fields.
+
+TypeScript, lint, formatting, Android native unit tests, and the arm64-v8a/x86_64
+Release build with its enforced gate passed. Logs are in
+`/private/tmp/tvremote-r8-{types,lint,format,gate-build}.log`. The earlier iOS
+simulator Release build passed; this correction changes Android packaging only.
+The new signed Play build and physical pairing verification remain required.
+Version code 10 predates this fix and must not be promoted as the closed-test
+candidate.

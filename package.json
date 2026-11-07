@@ -63,7 +63,8 @@
     "assets:generate": "node scripts/generate-brand-assets.mjs",
     "assets:check": "node scripts/generate-brand-assets.mjs --check && node scripts/verify-brand-assets.mjs",
     "store:generate": "node scripts/generate-play-assets.mjs",
-    "store:check": "node scripts/generate-play-assets.mjs --check && node scripts/verify-play-assets.mjs"
+    "store:check": "node scripts/generate-play-assets.mjs --check && node scripts/verify-play-assets.mjs",
+    "android:release:check": "node scripts/verify-protobuf-release.mjs"
   },
   "private": true,
   "engines": {

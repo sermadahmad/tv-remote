@@ -31,6 +31,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       ],
     },
     plugins: [
+      './plugins/withProtobufReleaseGate',
       ...(config.plugins ?? []).filter(
         (plugin) =>
           !['expo-build-properties', 'expo-dev-client'].includes(
