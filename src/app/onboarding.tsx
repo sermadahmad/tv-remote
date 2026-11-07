@@ -1,15 +1,11 @@
 import { router } from 'expo-router';
-import { ArrowUpRight, ShieldCheck, Wifi } from 'lucide-react-native';
-import { StyleSheet, Text, View } from 'react-native';
 
-import { Button } from '../shared/components/Button';
 import { BrandIllustration, BrandLogo } from '../shared/branding/Brand';
+import { Button } from '../shared/components/Button';
 import { Card, Copy, Screen } from '../shared/components/Screen';
-import { useTheme } from '../shared/theme';
 import { useSettingsStore } from '../store/settingsStore';
 
 export default function Onboarding() {
-  const { colors } = useTheme();
   const update = useSettingsStore((state) => state.update);
   const finish = (): void => {
     update({ onboarded: true });
@@ -17,57 +13,24 @@ export default function Onboarding() {
   };
   return (
     <Screen
-      title={'Your TV.\nCloser than ever.'}
-      subtitle="A little less searching for the remote. A little more time for what you love."
+      title="Let’s connect your TV."
+      subtitle="Your phone can be your remote. We’ll help you get connected."
     >
-      <BrandLogo />
-      <View style={[styles.illustration, { backgroundColor: colors.surface }]}>
-        <BrandIllustration kind="discovering" />
-        <View style={[styles.connection, { backgroundColor: colors.raised }]}>
-          <Wifi size={22} color={colors.accentText} />
-          <Text style={{ color: colors.text }}>Connected by Wi-Fi</Text>
-        </View>
-      </View>
+      <BrandLogo width={240} />
+      <BrandIllustration kind="discovering" width={200} />
       <Card>
-        <Wifi color={colors.accentText} />
+        <Copy>Turn on your TV. No remote? Use your TV’s own power button.</Copy>
         <Copy>
-          Connect your phone and Android TV or Google TV to the same Wi-Fi
-          network.
+          Connect your phone and TV to the same home Wi-Fi. We’ll search for
+          your TV automatically.
         </Copy>
+        <Copy>If a code appears on your TV, enter it on your phone.</Copy>
       </Card>
-      <Card>
-        <ShieldCheck color={colors.accentText} />
-        <Copy>
-          Enter the code shown on your TV to pair. Your connection stays on your
-          local network.
-        </Copy>
-      </Card>
-      <Button
-        label="Find my TV"
-        onPress={finish}
-        icon={<ArrowUpRight size={20} color={colors.onAccent} />}
-      />
-      <Button label="Skip introduction" secondary onPress={finish} />
+      <Button label="Find my TV" onPress={finish} />
       <Copy muted>
-        Works with compatible Android TV Remote Service devices. Features vary
-        by TV and application.
+        Works with compatible Android TV and Google TV devices. Available
+        controls depend on your TV and the app it is showing.
       </Copy>
     </Screen>
   );
 }
-const styles = StyleSheet.create({
-  illustration: {
-    minHeight: 210,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 24,
-  },
-  connection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    padding: 12,
-    borderRadius: 30,
-  },
-});

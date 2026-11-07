@@ -12,16 +12,35 @@ name: Explicit simulated TV journey
 - tapOn: Find my TV
 - assertVisible: Devices
 - assertVisible: Remote
+- scrollUntilVisible:
+    element: 'Need help?'
+- tapOn: 'Need help?'
+- scrollUntilVisible:
+    element: I’ve turned on my TV
+- takeScreenshot: simulated-power-button-help
+- tapOn: I’ve turned on my TV
+- scrollUntilVisible:
+    element: Connect to Living Room · Simulated
 - tapOn: Connect to Living Room · Simulated
-- assertVisible: A small introduction.
+- assertVisible: Enter the code shown on your TV
+- scrollUntilVisible:
+    element: Cancel connection
 - tapOn: Cancel connection
 - tapOn: Connect to Living Room · Simulated
+- scrollUntilVisible:
+    element: No code appeared?
+- tapOn: No code appeared?
+- assertVisible: 'Look at the TV screen.*'
+- tapOn: No code appeared?
+- scrollUntilVisible:
+    element: TV pairing code
+    direction: UP
 - tapOn: TV pairing code
 - inputText: '000000'
 - assertVisible: Pair securely
 - takeScreenshot: simulated-pairing-keyboard
 - tapOn: Pair securely
-- assertVisible: 'Enter the six characters shown on the TV.*'
+- assertVisible: 'Enter the six characters shown on your TV.*'
 - tapOn:
     text: Dismiss message
     optional: true
@@ -34,24 +53,40 @@ name: Explicit simulated TV journey
 - assertVisible: 'UI TEST.*SIMULATED TV.*'
 - tapOn: Up
 - tapOn: OK
+- scrollUntilVisible:
+    element: Home
 - tapOn: Home
 - takeScreenshot: simulated-remote
 - tapOn: Use touchpad
+- scrollUntilVisible:
+    element: 'Swipe to navigate.*'
+    direction: UP
 - assertVisible: 'Swipe to navigate.*'
 - tapOn: Settings
+- scrollUntilVisible:
+    element: Dark
 - tapOn: Dark
 - assertVisible: Dark · Selected
+- takeScreenshot: simulated-settings-dark
 - tapOn: Light
 - assertVisible: Light · Selected
 - takeScreenshot: simulated-settings
+- scrollUntilVisible:
+    element: Connection help
+- tapOn: Connection help
+- tapOn: Go back
 - tapOn: Remote
 - assertVisible: 'Swipe to navigate.*'
 - assertVisible: Connected · Local Wi-Fi
+- scrollUntilVisible:
+    element: Use direction buttons
 - tapOn: Use direction buttons
 - tapOn: Saved
 - back
 - assertVisible: Connected · Local Wi-Fi
 - tapOn: Saved
+- scrollUntilVisible:
+    element: Rename Living Room · Simulated
 - tapOn: Rename Living Room · Simulated
 - tapOn: Device name
 - eraseText: 1
@@ -60,6 +95,9 @@ name: Explicit simulated TV journey
 - assertVisible: Save name
 - takeScreenshot: simulated-rename-keyboard
 - tapOn: Save name
+- scrollUntilVisible:
+    element: Lounge
+    direction: UP
 - assertVisible: Lounge
 - tapOn: Connect to Lounge
 - extendedWaitUntil:

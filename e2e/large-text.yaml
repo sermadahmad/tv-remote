@@ -1,0 +1,42 @@
+appId: com.sermadahmad.tvremote.uitest
+name: Large-text beginner setup and keyboard
+---
+- launchApp:
+    clearState: true
+- openLink: 'universaltvremote-uitest://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081'
+- extendedWaitUntil:
+    visible: 'UI TEST.*SIMULATED TV.*'
+    timeout: 60000
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Read introduction again
+- tapOn: Read introduction again
+- assertVisible: Let’s connect your TV.
+- takeScreenshot: large-text-introduction
+- scrollUntilVisible:
+    element: Find my TV
+- tapOn: Find my TV
+- scrollUntilVisible:
+    element: Advanced connection options
+- tapOn: Advanced connection options
+- scrollUntilVisible:
+    element: Connect using IP address
+- tapOn: Connect using IP address
+- scrollUntilVisible:
+    element: TV IP address
+- tapOn: TV IP address
+- inputText: 8.8.8.8
+- tapOn: Connect to this address
+- assertVisible: 'Enter four numbers separated by dots.*'
+- scrollUntilVisible:
+    element: Connect to this address
+- assertVisible: Connect to this address
+- takeScreenshot: large-text-keyboard-validation
+- back
+- tapOn: Remote
+- scrollUntilVisible:
+    element: Choose a TV
+- assertVisible: Choose a TV

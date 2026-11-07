@@ -1,0 +1,34 @@
+appId: com.sermadahmad.tvremote.dev
+name: iOS release branding and beginner help
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    text: Cancel
+    optional: true
+- extendedWaitUntil:
+    visible: Let’s connect your TV.
+    timeout: 30000
+- scrollUntilVisible:
+    element: Find my TV
+- assertVisible: Find my TV
+- takeScreenshot: ios-introduction-action
+- tapOn: Find my TV
+- tapOn:
+    text: Allow
+    optional: true
+- assertVisible: Find your TV.
+- scrollUntilVisible:
+    element: 'Need help?'
+- tapOn: 'Need help?'
+- scrollUntilVisible:
+    element: I’ve turned on my TV
+- takeScreenshot: ios-power-button-help
+- tapOn: I’ve turned on my TV
+- tapOn: 'Settings.*'
+- tapOn: Dark
+- takeScreenshot: ios-dark-settings
+- tapOn: Light
+- takeScreenshot: ios-light-settings
+- tapOn: 'Remote.*'
+- assertVisible: Choose a TV

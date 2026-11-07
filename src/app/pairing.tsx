@@ -1,5 +1,4 @@
 import { router, useFocusEffect } from 'expo-router';
-import { ShieldCheck } from 'lucide-react-native';
 import { useCallback, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 
@@ -8,6 +7,10 @@ import { connection, report } from '../features/runtime';
 import { Button } from '../shared/components/Button';
 import { Card, Copy, Screen } from '../shared/components/Screen';
 import { useTheme } from '../shared/theme';
+import { BrandIllustration } from '../shared/branding/Brand';
+import { Disclosure } from '../shared/components/Disclosure';
+import { HelpContent } from '../features/help/HelpContent';
+import { userMessage } from '../features/help/presentation';
 import { useDeviceStore } from '../store/deviceStore';
 
 export default function Pairing() {
@@ -37,18 +40,18 @@ export default function Pairing() {
         state.status === 'error'
           ? 'Couldn’t connect to your TV.'
           : state.status === 'pairing'
-            ? 'A small introduction.'
+            ? 'Enter the code shown on your TV'
             : 'Connecting to your TV.'
       }
       subtitle={selected?.name ?? 'Choose a TV from the device list.'}
     >
       <Card>
-        <ShieldCheck size={36} color={colors.accentText} />
+        <BrandIllustration kind="pairing" width={180} />
         {state.status === 'pairing' ? (
           <PairingForm onSubmit={(code) => connection.submit(code)} />
         ) : state.status === 'error' ? (
           <>
-            <Copy>{state.error.message}</Copy>
+            <Copy>{userMessage(state.error)}</Copy>
             {selected && (
               <Button
                 label={
@@ -81,16 +84,19 @@ export default function Pairing() {
             <ActivityIndicator color={colors.accentText} />
             <Copy>
               {state.status === 'reconnecting'
-                ? `Reconnecting · attempt ${state.attempt} of 5`
-                : 'Waiting for your TV…'}
+                ? `Trying to reconnect… (${state.attempt} of 5)`
+                : 'Waiting for your TV to respond…'}
             </Copy>
           </>
         )}
       </Card>
+      <Disclosure title="No code appeared?">
+        <HelpContent topic="pairing" />
+      </Disclosure>
       <Button label="Cancel connection" secondary onPress={cancel} />
       <Copy muted>
-        Pairing credentials are stored securely on this phone. The pairing code
-        is never saved.
+        Your TV connection is saved securely on this phone. The code is never
+        saved.
       </Copy>
     </Screen>
   );

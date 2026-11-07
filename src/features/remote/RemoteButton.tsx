@@ -78,8 +78,16 @@ export function RemoteButton({
         styles.button,
         iconOnly && styles.iconButton,
         {
-          backgroundColor: primary ? colors.accent : colors.raised,
-          opacity: disabled ? 0.35 : pressed ? 0.65 : 1,
+          backgroundColor: primary
+            ? pressed
+              ? colors.accentPressed
+              : colors.accent
+            : pressed
+              ? colors.surface
+              : colors.raised,
+          borderColor: primary ? colors.accentText : colors.line,
+          borderWidth: 1,
+          opacity: disabled ? 0.35 : 1,
         },
       ]}
     >

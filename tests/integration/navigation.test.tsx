@@ -6,6 +6,7 @@ import { Button, Text, View } from 'react-native';
 
 import TabLayout from '../../src/app/(tabs)/_layout';
 import Pairing from '../../src/app/pairing';
+import Help from '../../src/app/help';
 import type { RemoteCommand } from '../../src/core/tv/types';
 import { useDiscovery } from '../../src/features/discovery/useDiscovery';
 import { useFocusedCommands } from '../../src/features/remote/useFocusedCommands';
@@ -43,7 +44,17 @@ function Remote() {
 }
 function Devices() {
   useDiscovery();
-  return <Text>Discovery screen</Text>;
+  return (
+    <View>
+      <Text>Discovery screen</Text>
+      <Button
+        title="Need help?"
+        onPress={() =>
+          router.push({ pathname: '/help', params: { topic: 'tv-off' } })
+        }
+      />
+    </View>
+  );
 }
 function Saved() {
   return (
@@ -60,11 +71,34 @@ const routes = {
   '(tabs)/saved': Saved,
   '(tabs)/settings': () => <Text>Settings screen</Text>,
   pairing: Pairing,
+  help: Help,
 };
 beforeEach(() => {
   useDeviceStore.setState({
     connection: { status: 'disconnected' },
     selected: null,
+  });
+});
+
+test('help suspends discovery, returns to its originating tab and restarts discovery after turning on the TV', async () => {
+  useDeviceStore.setState({
+    connection: { status: 'connected', session: testSession },
+  });
+  await renderRouter(routes, { initialUrl: '/devices' });
+  expect(discovery.start).toHaveBeenCalledTimes(1);
+  await fireEvent.press(screen.getByText('Need help?'));
+  expect(discovery.stop).toHaveBeenCalledTimes(1);
+  await fireEvent.press(screen.getByLabelText('Go back'));
+  expect(screen).toHavePathname('/devices');
+  expect(discovery.start).toHaveBeenCalledTimes(2);
+  await fireEvent.press(screen.getByText('Need help?'));
+  await fireEvent.press(screen.getByText('I’ve turned on my TV'));
+  expect(screen).toHavePathname('/devices');
+  expect(discovery.start).toHaveBeenCalledTimes(3);
+  expect(connection.disconnect).not.toHaveBeenCalled();
+  expect(useDeviceStore.getState().connection).toEqual({
+    status: 'connected',
+    session: testSession,
   });
 });
 

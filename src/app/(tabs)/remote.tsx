@@ -22,6 +22,8 @@ import { connection, report } from '../../features/runtime';
 import { Button } from '../../shared/components/Button';
 import { Card, Copy, Screen } from '../../shared/components/Screen';
 import { tokens, useTheme } from '../../shared/theme';
+import { BrandIllustration } from '../../shared/branding/Brand';
+import { userMessage } from '../../features/help/presentation';
 import { useDeviceStore } from '../../store/deviceStore';
 
 export default function Remote() {
@@ -37,16 +39,27 @@ export default function Remote() {
     return (
       <Screen
         tabbed
-        title="A moment to reconnect."
-        subtitle="Controls will be ready when your TV reconnects."
+        compact
+        title={
+          state.status === 'connecting'
+            ? 'Connecting to your TV…'
+            : state.status === 'reconnecting'
+              ? 'Connection lost. Trying again…'
+              : state.status === 'error'
+                ? 'Let’s reconnect your TV.'
+                : 'Your remote starts here.'
+        }
+        subtitle="Keep your TV on and your phone on the same home Wi-Fi."
       >
-        <Card>
+        <Card compact>
           <Copy>
             {state.status === 'error'
-              ? state.error.message
+              ? userMessage(state.error)
               : state.status === 'reconnecting'
-                ? `Connection interrupted · attempt ${state.attempt} of 5`
-                : 'Choose a TV to start watching.'}
+                ? `Trying to reconnect… (${state.attempt} of 5)`
+                : state.status === 'connecting'
+                  ? 'Waiting for your TV to respond…'
+                  : 'Choose a TV and we’ll help you get connected.'}
           </Copy>
           <Button
             label="Choose a TV"
@@ -63,6 +76,22 @@ export default function Remote() {
             />
           )}
         </Card>
+        <BrandIllustration
+          kind={
+            state.status === 'disconnected' ? 'discovering' : 'connection-lost'
+          }
+          width={180}
+        />
+        <Button
+          label="Need help?"
+          secondary
+          onPress={() =>
+            router.push({
+              pathname: '/help',
+              params: { topic: 'connection-lost' },
+            })
+          }
+        />
       </Screen>
     );
   const capabilities = state.session.capabilities;

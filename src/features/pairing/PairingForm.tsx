@@ -6,6 +6,7 @@ import { pairingCode } from '../../core/tv/validation';
 import { Button } from '../../shared/components/Button';
 import { Copy } from '../../shared/components/Screen';
 import { tokens, useTheme } from '../../shared/theme';
+import { userMessage } from '../help/presentation';
 
 export function PairingForm({
   onSubmit,
@@ -27,7 +28,7 @@ export function PairingForm({
       setError(null);
       await onSubmit(normalized);
     } catch (error) {
-      setError(failure(error).message);
+      setError(userMessage(failure(error)));
     } finally {
       inFlight.current = false;
       setBusy(false);
@@ -36,13 +37,18 @@ export function PairingForm({
   };
   return (
     <>
-      <Copy>Enter the six-character code shown on your TV.</Copy>
+      <Copy>
+        Enter the six characters on your TV: numbers 0–9 and letters A–F.
+      </Copy>
       <TextInput
         testID="pairing-code"
         accessibilityLabel="TV pairing code"
-        accessibilityHint="Six hexadecimal characters, using zero through nine and A through F"
+        accessibilityHint="Six characters, using numbers zero through nine and letters A through F"
         value={code}
-        onChangeText={(value) => setCode(value.toUpperCase())}
+        onChangeText={(value) => {
+          setCode(value.toUpperCase());
+          setError(null);
+        }}
         maxLength={6}
         autoCapitalize="characters"
         autoCorrect={false}
@@ -64,7 +70,6 @@ export function PairingForm({
           void submit();
         }}
       />
-      <Copy muted>The code can contain letters A–F as well as numbers.</Copy>
       {error && (
         <Text accessibilityRole="alert" style={{ color: colors.error }}>
           {error}

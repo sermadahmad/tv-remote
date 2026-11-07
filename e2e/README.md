@@ -1,5 +1,23 @@
 # Local UI automation
 
+The beginner flows use **Find your TV**, **Need help?**, and **Advanced connection
+options**. Manual address entry stays inside the advanced disclosure. The full
+fixture journey also exercises inline pairing help, power-button guidance and
+visiting Help while a TV is connected.
+
+`large-text.yaml` runs on the isolated `.uitest` application. Set the emulator's
+system font scale to 1.3 before running it, and restore the previous value after
+the run. It covers the introductory action and keyboard-visible manual validation.
+`ios-brand-smoke.yaml` uses the real-adapter `.dev` simulator Release build and
+covers enlarged-text setup, help return and themes without selecting a TV.
+iOS tab selectors include the platform's accessible tab-position suffix.
+
+Wait for Android's `sys.boot_completed=1` and the boot animation to stop before
+starting Maestro. Run one driver per device. A System UI error dialog or a driver
+startup timeout is an environment failure, not a passing application test. Set
+`MAESTRO_DRIVER_STARTUP_TIMEOUT=180000` for slow local driver startup, and run
+native compilation and emulator journeys sequentially on constrained machines.
+
 The development-client flows use Metro on port 8081. The release flow below uses the application's embedded bundle. Maestro 2.12.1 was used locally; no Maestro cloud service is required. Disable Maestro analytics with both environment variables below. An emulator cannot establish compatibility with a real TV.
 
 ## Android
@@ -75,10 +93,10 @@ Adjust the source AAB filename for later version codes. Debug-signed QA and Play
 
 ## iOS and limitations
 
-The iOS native simulator build and hosted Keychain tests passed. Full Maestro iOS execution remains unverified after driver/accessibility startup failures and development-launcher interruptions on iOS 26.4. The YAML flows are checked in for further simulator validation; do not count them as passing iOS coverage.
+The iOS native simulator build and hosted Keychain tests passed. For the branding revision, `ios-brand-smoke.yaml` passed against an unsigned simulator Release build on iOS 26.4 at extra-extra-extra-large text: onboarding, physical-power-button help, return to Devices, dark/light settings and Remote. This real-adapter smoke does not exercise TV pairing or the complete connected fixture journey on iOS. Earlier development-launcher/driver failures are retained in the historical validation record.
 
 Fixture credentials live in memory. The fixture flow validates application behavior during one run, not restart persistence, native TLS, discovery permissions, or TV command execution. Final run results are maintained in [TESTING.md](../TESTING.md).
 
 The hardware-fix revision also tests submit controls with the software keyboard enabled: pairing and rename in the fixture flow, plus manual-address validation in the real-adapter flow. Run one UI automation session per device; do not run `uiautomator dump` against that device concurrently. Cold builds and an overloaded emulator caused startup timeouts during diagnosis; the full fixture journey subsequently passed with exclusive automation after native compilation finished.
 
-When real TVs are on the LAN, the production smoke accepts searching, discovery advertisements, empty results or actionable network/permission states; an empty-scan-only assertion would be incorrect. The launch/keyboard smoke does not gate on a terminal scan state; deterministic service tests cover scan deadlines. The hardware-fix rerun observed the Dawlance advertisement from the API 35 emulator after macOS local-network access was enabled.
+When real TVs are on the LAN, the production smoke accepts searching, discovery advertisements, empty results or actionable network/permission states; an empty-scan-only assertion would be incorrect. The branding revision waits for the initial scan to settle before scrolling to the advanced form, so the searching-to-empty layout change cannot move a button between lookup and tap. Deterministic service tests also cover scan deadlines. The hardware-fix rerun observed the Dawlance advertisement from the API 35 emulator after macOS local-network access was enabled.

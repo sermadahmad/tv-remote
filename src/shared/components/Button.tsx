@@ -50,9 +50,14 @@ export function Button({
         compact && styles.compactButton,
         {
           backgroundColor: secondary
-            ? theme.colors.raised
-            : theme.colors.accent,
-          opacity: inactive ? 0.45 : pressed ? 0.7 : 1,
+            ? pressed
+              ? theme.colors.surface
+              : theme.colors.raised
+            : pressed
+              ? theme.colors.accentPressed
+              : theme.colors.accent,
+          borderColor: secondary ? theme.colors.line : theme.colors.accentText,
+          opacity: inactive ? 0.45 : 1,
         },
       ]}
     >
@@ -77,6 +82,7 @@ export function Button({
 }
 const styles = StyleSheet.create({
   button: {
+    borderWidth: 1,
     minHeight: tokens.target,
     borderRadius: tokens.radius.md,
     paddingHorizontal: tokens.space.lg,
@@ -91,5 +97,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: tokens.space.sm,
   },
   compactLabel: { fontSize: tokens.type.caption },
-  label: { fontSize: tokens.type.body, fontWeight: '600', textAlign: 'center' },
+  label: {
+    fontSize: tokens.type.body,
+    fontWeight: '600',
+    textAlign: 'center',
+    flexShrink: 1,
+  },
 });

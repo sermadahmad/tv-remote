@@ -4,16 +4,33 @@ name: Production AAB release smoke
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: Find my TV
+    visible: Let’s connect your TV.
     timeout: 60000
 - assertNotVisible: 'UI TEST.*'
 - scrollUntilVisible:
     element: Find my TV
 - tapOn: Find my TV
-- assertVisible: Make yourself at home.
+- assertVisible: Find your TV.
 - extendedWaitUntil:
-    visible: 'No TVs found yet|Connect your phone and TV.*|Allow local network access.*'
+    visible: 'Searching for your TV.*|We couldn’t find your TV.|Connect to .*|Connect your phone to Wi-Fi.*|Allow the app to find devices.*'
     timeout: 30000
+- extendedWaitUntil:
+    visible: 'We couldn’t find your TV.|Connect to .*|Connect your phone to Wi-Fi.*|Allow the app to find devices.*'
+    timeout: 30000
+- scrollUntilVisible:
+    element: Advanced connection options
+- tapOn: Advanced connection options
+- scrollUntilVisible:
+    element: Connect using IP address
+- tapOn: Connect using IP address
+- scrollUntilVisible:
+    element: TV IP address
+- tapOn: TV IP address
+- inputText: 8.8.8.8
+- assertVisible: Connect to this address
+- tapOn: Connect to this address
+- assertVisible: 'Enter four numbers separated by dots.*'
+- back
 - tapOn: Remote
 - assertVisible: Choose a TV
 - tapOn: Settings

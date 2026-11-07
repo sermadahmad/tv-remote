@@ -65,7 +65,8 @@ export function Screen({
               // Window coordinates include safe areas and the fixture banner. Re-measure after
               // viewport/content changes so discovery results cannot push the form under the IME.
               const actionSpace = Math.min(
-                tokens.target * 3,
+                // Leave room for wrapped validation text and the primary action at larger font sizes.
+                tokens.target * 4,
                 Math.max(
                   0,
                   viewportHeight.current - height - tokens.space.card,

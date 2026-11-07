@@ -20,6 +20,7 @@ import {
   report,
 } from '../features/runtime';
 import { tokens, useTheme } from '../shared/theme';
+import { userMessage } from '../features/help/presentation';
 import { useDeviceStore } from '../store/deviceStore';
 import { useSettingsStore } from '../store/settingsStore';
 
@@ -94,6 +95,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
           <Stack.Screen name="onboarding" />
+          <Stack.Screen name="help" />
           <Stack.Screen
             name="pairing"
             options={{ presentation: 'fullScreenModal' }}
@@ -125,7 +127,7 @@ function AppNotice() {
       accessibilityLiveRegion="polite"
     >
       <Text style={{ color: theme.colors.text, flex: 1 }}>
-        {notice.message}
+        {userMessage(notice)}
       </Text>
       <Pressable
         accessibilityRole="button"

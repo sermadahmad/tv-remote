@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ArrowRight, Radio, RefreshCw, Tv, Wifi } from 'lucide-react-native';
+import { ArrowRight, RefreshCw, Wifi } from 'lucide-react-native';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -17,6 +17,10 @@ import type { TVTarget } from '../../core/tv/types';
 import { manualTarget } from '../../core/tv/validation';
 import { useDiscovery } from '../../features/discovery/useDiscovery';
 import { connection, report } from '../../features/runtime';
+import { userMessage } from '../../features/help/presentation';
+import { helpTopics } from '../../features/help/content';
+import { BrandIllustration, BrandMark } from '../../shared/branding/Brand';
+import { Disclosure } from '../../shared/components/Disclosure';
 import { Button } from '../../shared/components/Button';
 import { Card, Copy, Screen } from '../../shared/components/Screen';
 import { useTheme } from '../../shared/theme';
@@ -41,14 +45,14 @@ export default function Devices() {
       setError(null);
       select(target);
     } catch (error) {
-      setError(failure(error).message);
+      setError(userMessage(failure(error)));
     }
   };
   return (
     <Screen
       tabbed
-      title="Make yourself at home."
-      subtitle="Choose a TV on your Wi-Fi network to get started."
+      title="Find your TV."
+      subtitle="We’ll look for compatible TVs on your home network. Tap yours to connect."
     >
       {current.status === 'connected' && (
         <Button
@@ -75,8 +79,12 @@ export default function Devices() {
       </View>
       {(discovery.status === 'searching' || discovery.status === 'idle') && (
         <Card>
-          <ActivityIndicator color={colors.accentText} />
-          <Copy>Looking for your TV…</Copy>
+          <BrandIllustration kind="discovering" width={200} />
+          <ActivityIndicator
+            color={colors.accentText}
+            accessibilityLabel="Searching for your TV"
+          />
+          <Copy>Searching for your TV…</Copy>
           <Copy muted>
             Make sure your TV is on and connected to the same network.
           </Copy>
@@ -94,7 +102,7 @@ export default function Devices() {
               <View
                 style={[styles.deviceIcon, { backgroundColor: colors.raised }]}
               >
-                <Tv color={colors.accentText} size={28} />
+                <BrandMark size={48} />
               </View>
               <View style={styles.deviceName}>
                 <Text
@@ -117,18 +125,19 @@ export default function Devices() {
       ))}
       {discovery.status === 'empty' && (
         <Card>
-          <Radio color={colors.accentText} />
-          <Copy>No TVs found yet</Copy>
-          <Copy muted>
-            Check your TV’s network connection. Guest Wi-Fi and router isolation
-            can prevent discovery.
-          </Copy>
-          <Button label="Search again" secondary onPress={discovery.refresh} />
+          <BrandIllustration kind="no-tv" width={200} />
+          <Copy>We couldn’t find your TV.</Copy>
+          <Copy muted>Let’s check a few things so we can get connected.</Copy>
+          {helpTopics.network.checklist.map((item) => (
+            <Copy key={item}>• {item}</Copy>
+          ))}
+          <Button label="Search again" onPress={discovery.refresh} />
         </Card>
       )}
       {discovery.error && (
         <Card>
-          <Copy>{discovery.error.message}</Copy>
+          <BrandIllustration kind="no-tv" width={200} />
+          <Copy>{userMessage(discovery.error)}</Copy>
           <Button
             label={
               discovery.error.code === 'permissionDenied'
@@ -145,41 +154,87 @@ export default function Devices() {
         </Card>
       )}
       <Button
-        label={manual ? 'Hide manual connection' : 'Enter TV IP address'}
+        label="Need help?"
         secondary
-        onPress={() => setManual(!manual)}
+        onPress={() =>
+          router.push({
+            pathname: '/help',
+            params: {
+              topic:
+                discovery.error?.code === 'permissionDenied'
+                  ? 'permissions'
+                  : 'tv-off',
+            },
+          })
+        }
       />
-      {manual && (
-        <Card>
-          <Copy>Find the TV’s IP address in its network settings.</Copy>
-          <TextInput
-            accessibilityLabel="TV IP address"
-            placeholder="192.168.1.25"
-            placeholderTextColor={colors.muted}
-            value={address}
-            onChangeText={(value) => {
-              setAddress(value);
-              setError(null);
-            }}
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="numbers-and-punctuation"
-            returnKeyType="go"
-            submitBehavior="blurAndSubmit"
-            onSubmitEditing={connectManually}
-            style={[
-              styles.input,
-              { color: colors.text, borderColor: colors.line },
-            ]}
+      <Disclosure title="Advanced connection options">
+        <Copy muted>
+          Most people won’t need this. Try searching for your TV first.
+        </Copy>
+        {!manual && (
+          <Button
+            label="Connect using IP address"
+            secondary
+            onPress={() => setManual(true)}
           />
-          {error && (
-            <Text accessibilityRole="alert" style={{ color: colors.error }}>
-              {error}
-            </Text>
-          )}
-          <Button label="Connect to this address" onPress={connectManually} />
-        </Card>
-      )}
+        )}
+        {manual && (
+          <Card>
+            <Copy>Connect using your TV’s IP address</Copy>
+            <Copy muted>
+              An IP address is a number that helps your phone find your TV on
+              your home network. Pairing is still required.
+            </Copy>
+            <TextInput
+              accessibilityLabel="TV IP address"
+              placeholder="192.168.1.25"
+              placeholderTextColor={colors.muted}
+              value={address}
+              onChangeText={(value) => {
+                setAddress(value);
+                setError(null);
+              }}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="numbers-and-punctuation"
+              returnKeyType="go"
+              submitBehavior="blurAndSubmit"
+              onSubmitEditing={connectManually}
+              style={[
+                styles.input,
+                { color: colors.text, borderColor: colors.line },
+              ]}
+            />
+            {error && (
+              <Text accessibilityRole="alert" style={{ color: colors.error }}>
+                {error}
+              </Text>
+            )}
+            <Button label="Connect to this address" onPress={connectManually} />
+            <Button
+              label="Help me find the address"
+              secondary
+              onPress={() =>
+                router.push({
+                  pathname: '/help',
+                  params: { topic: 'ip-address' },
+                })
+              }
+            />
+            <Button
+              label="Cancel manual connection"
+              secondary
+              onPress={() => {
+                Keyboard.dismiss();
+                setManual(false);
+                setAddress('');
+                setError(null);
+              }}
+            />
+          </Card>
+        )}
+      </Disclosure>
       <Copy muted>
         Your TV may be connected by Ethernet, as long as it shares the same
         local network.

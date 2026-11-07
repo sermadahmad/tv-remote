@@ -1,6 +1,6 @@
 # Validation record
 
-Updated on 2026-11-06. Local checks and manually triggered EAS cloud runs are identified below. GitHub Actions have not run remotely. No code has been pushed.
+Updated on 2026-11-07. Historical cloud runs and the latest local checks are identified below. No push, deployment or cloud monitoring was performed during the branding and beginner-setup task.
 
 ## Environment and completed checks
 
@@ -17,7 +17,7 @@ macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, And
 | Expo dependency compatibility     | Up to date                                                                                                   |
 | Production JavaScript export      | iOS and Android Hermes bytecode exports passed                                                               |
 | TypeScript                        | Passed                                                                                                       |
-| Jest                              | 100 tests passed; 93.70% statements, 91.03% branches in the gated core/application scope                     |
+| Jest                              | 110 tests passed; 93.70% statements, 91.03% branches in the gated core/application scope                     |
 | Lint and formatting               | Passed on the staged implementation snapshots                                                                |
 | Android real-adapter Maestro      | Production smoke passed unattended on API 35: onboarding, discovery/empty state, no fixture                  |
 | Android simulated-TV Maestro      | Full journey passed unattended: cancel/wrong code, pair, remote, themes, rename/reconnect/forget             |
@@ -25,7 +25,7 @@ macOS Intel, Node 24.19.0, Java 17, Swift 6.3, Xcode 26.4, CocoaPods 1.16.2, And
 | Final EAS workflow                | Quality/native, signed version-code-4 build and automatic internal submission all passed                     |
 | Signed version-code-4 AAB         | Package, upload signature, real adapter, backup, SDK and cleaned permissions verified                        |
 | Play internal tester availability | Active internal release; intended account's invitation verified; phone installation not performed            |
-| iOS simulator / Maestro           | Full flow unverified: driver startup/accessibility and development-launcher problems                         |
+| iOS simulator / Maestro           | Brand/setup Release smoke passed at enlarged text; full connected journey pending                            |
 | Physical Android phone / TV       | Android 14 CPH2363: discovery/pairing, pinned control, sustained input, lifecycle and keyboard checks passed |
 | Android Keystore instrumentation  | 2 physical-phone tests passed: non-exportable TLS signing/persistence/deletion and off-main-thread cleanup   |
 | Physical iPhone / TV              | Unavailable; not tested                                                                                      |
@@ -129,10 +129,70 @@ Record the actual TV manufacturer/model, firmware, Android TV Remote Service ver
 | Background, foreground, switching and forgetting                | Lifecycle passed; switching/forgetting tested with fixtures                  | Not tested      |
 | Small/large phones, screen reader, dynamic text, reduced motion | Partial simulator review; full device review pending                         | Not tested      |
 
+## Branding and beginner setup validation
+
+The Screen + D-pad identity is implemented in `assets/brand/`; see `BRAND.md`
+for dimensions, color roles, font provenance, and offline regeneration. The
+beginner setup and troubleshooting contract is documented in `UX.md`.
+
+| Check                                   | Actual result                                                                                                                                                                                                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Asset generation and repeatability      | 53 generated outputs verified, including 24 PNGs, editable/outlined SVGs and the typed runtime registry                                                                                                                                                      |
+| Launcher images                         | 1024 × 1024; main/background RGB without alpha; adaptive foreground/monochrome and splash have transparency                                                                                                                                                  |
+| Adaptive geometry                       | Visible foreground/monochrome pixels fit the central 66dp safe circle; circle, rounded-square and squircle previews reviewed                                                                                                                                 |
+| Contrast                                | Normal/pressed button text, both theme palettes and switch/control graphics meet the scripted 4.5:1 text / 3:1 graphics checks                                                                                                                               |
+| Type, lint, format and JavaScript tests | Passed; 110 tests across 12 suites                                                                                                                                                                                                                           |
+| Domain/application coverage             | 93.70% statements, 91.03% branches; configured gates passed                                                                                                                                                                                                  |
+| Expo                                    | Doctor 20/20; dependency compatibility, all three config variants, asset paths, fixture isolation and native registration passed                                                                                                                             |
+| Production Hermes exports               | Android and iOS passed from the final UI source                                                                                                                                                                                                              |
+| Android native                          | x86_64 local Release build passed; 7 native protocol/activity tests passed                                                                                                                                                                                   |
+| Android release identity                | `com.sermadahmad.tvremote`, version code 1, min API 24, target 36, compile 37; embedded `uiTest: false`; local QA signature verified                                                                                                                         |
+| iOS native                              | Unsigned x86_64 simulator Release build passed using `com.sermadahmad.tvremote.dev`                                                                                                                                                                          |
+| Android launcher and splash             | Actual circular launcher icon and centered symbol on navy reviewed from the Release cold-start capture; no clipping or stretching observed                                                                                                                   |
+| iOS launcher and splash                 | Actual launcher icon and centered teal/mint symbol on navy captured from the release; no stretching or clipping observed                                                                                                                                     |
+| iOS enlarged-text journey               | Maestro passed onboarding, power-button help, return to Devices, dark/light settings and Remote on a 375 × 667 simulator at extra-extra-extra-large text                                                                                                     |
+| Android small-phone fixture journey     | Maestro passed on a 360 × 640 layout: onboarding/help, pairing cancellation, incorrect code, keyboard-visible pairing and rename, navigation/touchpad, connected Help return, themes, rename/reconnect, forget and the primary setup action after forgetting |
+
+Both Android production smoke flows passed against the final embedded Release APK,
+covering first launch, real-adapter discovery, the advanced disclosure, private-IP
+validation with the keyboard open, all four tabs and Android Back. The flows wait
+for the first scan to settle before entering the form so a layout change cannot
+move a button between lookup and tap. Two legacy `dev.universaltv.remote*` QA apps
+initially caused an Android URL chooser; they were temporarily disabled for the
+development-client URL flow and restored to their original default states.
+
+Android large-text automation also passed at 360 × 640 and 130% system text,
+including rereading the introduction, the advanced manual-address disclosure,
+and wrapped validation plus the submit button above the open software keyboard.
+The test restores the original font scale after the run. A persisted development-
+client relaunch initially created duplicate routing roots; the fixture test now
+clears its isolated app state before opening the test server, as the full journey
+already does.
+
+Release evidence is under the ignored `artifacts/qa/brand-ux/` directory, including
+`android-launcher-verified.png`, `android-splash-verified.png`,
+`ios-launcher-verified.png`, `ios-splash-verified.png`, large-text screenshots and
+the Maestro run directories. The tracked visual overview is
+`assets/brand/review/brand-review.png`. The
+Android APK is signed with the generated **local debug key for emulator QA**;
+it is not an EAS upload-key-signed store artifact. Its final SHA-256 is
+`8a8244c2c93a318e77e7f3b57486c05b69070f8bc62521ce99e7297f4d2981c4`.
+The packaged adaptive-icon XML references background, foreground and monochrome
+layers. Permissions remain internet, network/Wi-Fi state, vibration and the
+application-scoped internal receiver permission. No new cloud build, submission,
+push or promotion was performed for this task. App IDs, credentials, onboarding
+preferences, transport behavior and capability restrictions were preserved.
+
+Initial concurrent-build Android automation attempts were obstructed by emulator
+System UI dialogs and driver startup timeouts. Those attempts do not count as
+passing UI results. VoiceOver/TalkBack on physical devices, minimum-OS hardware,
+and a complete accessibility audit remain pending; enlarged-text automation is
+not a substitute for them. No new real-TV compatibility claim is made.
+
 ## Remaining release gates
 
 The initial displayed-code trust policy is proposed and requires hardware and security review. The control endpoint must present the same pinned public key learned during pairing; a mismatch fails closed. Keystore/Keychain credential lifecycle, backup exclusions, and interrupted native operations require on-device validation. Transport success is not TV-side execution confirmation. There is no certified compatibility list yet.
 
-Debug builds and JavaScript exports do not replace signed release inspection. Android signing, permanent distribution identities, signed-AAB inspection, full EAS pipeline and internal tester invitation are verified. Phone installation, final icons/screenshots, store metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
+Debug builds and JavaScript exports do not replace signed release inspection. Android signing, permanent distribution identities, signed-AAB inspection, full EAS pipeline and internal tester invitation are verified. Production phone installation, store listing screenshots, metadata/privacy forms, and minimum-OS device tests remain pending; see DEPLOYMENT.md for current account and cloud results.
 
 The dependency audit reports 31 advisories (30 moderate, 1 low), with no high/critical advisories. These include tooling advisories for glob/minimatch and a deepmerge advisory without a published fix. Do not force Expo/Jest downgrades to silence the audit. Dependency remediation remains a release gate; rerun compatibility/native checks after dependency changes.

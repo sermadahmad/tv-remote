@@ -7,6 +7,7 @@ import { report } from '../../features/runtime';
 import { Button } from '../../shared/components/Button';
 import { Card, Copy, Screen } from '../../shared/components/Screen';
 import { useTheme } from '../../shared/theme';
+import { BrandLogo } from '../../shared/branding/Brand';
 import { useSettingsStore } from '../../store/settingsStore';
 
 export default function Settings() {
@@ -43,7 +44,8 @@ export default function Settings() {
             hitSlop={12}
             value={settings.haptics}
             onValueChange={(haptics) => settings.update({ haptics })}
-            trackColor={{ true: colors.accent }}
+            trackColor={{ true: colors.accentText, false: colors.line }}
+            thumbColor={settings.haptics ? colors.onAccent : colors.text}
           />
         </View>
       </Card>
@@ -57,17 +59,21 @@ export default function Settings() {
         <Copy>Private, by design</Copy>
         <Copy muted>
           TV control happens on your local network. No account, analytics,
-          advertising, or cloud service is used. Pairing keys stay in your
-          phone’s protected native storage.
+          advertising, or cloud service is used. Your saved TV connection is
+          protected by your phone.
         </Copy>
       </Card>
       <Card>
         <Copy>Troubleshooting</Copy>
         <Copy muted>
-          Keep both devices on the same network. Guest Wi-Fi, VPNs, and router
-          isolation can block discovery. Try entering your TV’s IP address. A TV
-          in standby may stop accepting network connections.
+          No remote, no TV found, or trouble connecting? We’ll walk you through
+          a few simple checks.
         </Copy>
+        <Button
+          label="Connection help"
+          secondary
+          onPress={() => router.push('/help')}
+        />
         <Button
           label="Open app permissions"
           secondary
@@ -77,10 +83,10 @@ export default function Settings() {
         />
       </Card>
       <Card>
+        <BrandLogo width={260} />
         <Copy>About Universal TV Remote</Copy>
         <Copy muted>
-          Version {Application.nativeApplicationVersion ?? '0.1.0'} · Android TV
-          Remote v2
+          Version {Application.nativeApplicationVersion ?? '0.1.0'}
         </Copy>
         <Copy muted>
           TV text input is unavailable. Control support depends on your TV’s

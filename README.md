@@ -1,5 +1,8 @@
 # Universal TV Remote
 
+Brand artwork, dimensions and regeneration: [BRAND.md](BRAND.md).
+Beginner setup and troubleshooting behavior: [UX.md](UX.md).
+
 A native Android/iOS remote for compatible Android TV and Google TV devices on the same Wi-Fi network. Local communication only: no accounts, backend, advertising, or analytics.
 
 The Kotlin and Swift adapters implement Bonjour/NSD discovery, RSA client identities, hexadecimal pairing, pinned TLS, Protobuf framing, startup negotiation, ping responses, and key injection. The app includes onboarding, discovery/manual address entry, pairing, a D-pad/touchpad remote, saved devices, and settings.
@@ -32,6 +35,7 @@ Allow local-network access when discovery requests it. The phone must use Wi-Fi;
 npm run typecheck
 npm run lint
 npm run format:check
+npm run assets:check
 npm run test:coverage
 node scripts/verify-deployment.mjs
 node scripts/verify-fixtures.mjs

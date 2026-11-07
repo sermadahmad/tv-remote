@@ -23,7 +23,7 @@ name: Real adapter simulator launch
     text: Close
     optional: true
 - extendedWaitUntil:
-    visible: Find my TV
+    visible: Let’s connect your TV.
     timeout: 120000
 - assertNotVisible: 'UI TEST.*'
 - takeScreenshot: production-onboarding
@@ -33,13 +33,21 @@ name: Real adapter simulator launch
 - tapOn:
     text: Allow
     optional: true
-- assertVisible: Make yourself at home.
+- assertVisible: Find your TV.
 - extendedWaitUntil:
-    visible: 'Looking for your TV.*|No TVs found yet|Connect to .*|Connect your phone and TV.*|Allow local network access.*'
+    visible: 'Searching for your TV.*|We couldn’t find your TV.|Connect to .*|Connect your phone to Wi-Fi.*|Allow the app to find devices.*'
+    timeout: 30000
+- extendedWaitUntil:
+    visible: 'We couldn’t find your TV.|Connect to .*|Connect your phone to Wi-Fi.*|Allow the app to find devices.*'
     timeout: 30000
 - assertNotVisible: '.*Simulated.*'
 - takeScreenshot: production-discovery
-- tapOn: Enter TV IP address
+- scrollUntilVisible:
+    element: Advanced connection options
+- tapOn: Advanced connection options
+- scrollUntilVisible:
+    element: Connect using IP address
+- tapOn: Connect using IP address
 - scrollUntilVisible:
     element: TV IP address
 - tapOn: TV IP address
@@ -47,7 +55,7 @@ name: Real adapter simulator launch
 - assertVisible: Connect to this address
 - takeScreenshot: production-address-keyboard
 - tapOn: Connect to this address
-- assertVisible: 'Enter a private local IP address.*'
+- assertVisible: 'Enter four numbers separated by dots.*'
 - back
 - tapOn: Remote
 - assertVisible: Choose a TV
